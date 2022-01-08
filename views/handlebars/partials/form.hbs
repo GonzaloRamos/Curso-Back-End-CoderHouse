@@ -1,0 +1,28 @@
+<form action="/api/productos/save" method="post">
+  <div class="input-group">
+    <span class="input-group-text">Nombre y precio</span>
+    <input
+      type="text"
+      name="title"
+      aria-label="First name"
+      class="form-control"
+    />
+    <input
+      type="number"
+      name="price"
+      aria-label="Last name"
+      class="form-control"
+    />
+  </div>
+  <div class="mb-3">
+    <label for="exampleFormControlInput1" class="form-label">Imagen</label>
+    <input
+      type="text"
+      class="form-control"
+      name="thumbnail"
+      id="exampleFormControlInput1"
+      placeholder="Ingresa la url"
+    />
+  </div>
+  <button class="btn btn-primary" type="submit">Enviar</button>
+</form>

@@ -1,6 +1,6 @@
-const productosList = require("../data/productos");
+const productosList = require("../../data/productos");
 const { v4: uuidv4 } = require("uuid");
-class list {
+class ApiProductos {
   constructor() {
     this.productos = [];
     this.load();
@@ -37,9 +37,17 @@ class list {
   }
 
   deleteProducto(id) {
-    const newList = this.productos.filter((producto) => producto.id !== id);
-    this.productos = newList;
+    const productExist = this.productos.includes(
+      (producto) => producto.id === id
+    );
+
+    if (productExist) {
+      const newList = this.productos.filter((producto) => producto.id !== id);
+      this.productos = newList;
+      return true;
+    }
+    return;
   }
 }
 
-module.exports = list;
+module.exports = ApiProductos;
