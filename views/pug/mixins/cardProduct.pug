@@ -1,0 +1,8 @@
+mixin cardProduct(title, thumbnail, price)
+
+    .col
+        .card
+            img(src=thumbnail).card-img-top
+            .card-body 
+                h5.card-title=title
+                h6.card-subtitle.mb-2.text-muted=price

@@ -11,6 +11,9 @@ const listaProductos = require("./data/productos");
 // app.use(express.static(path.resolve(__dirname, "./public")));
 
 //Views engine
+
+/*            --------        HANDLEBARS    --------     
+
 app.engine(
   "handlebars",
   engine({
@@ -22,17 +25,35 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 app.set("views", path.resolve(__dirname, "./views/handlebars"));
+*/
+
+/*          --------        EXPRESS-PUG    --------
+
+app.set("view engine", "pug");
+app.set("views", path.resolve(__dirname, "./views/pug"));
+*/
 
 //Rutas
 app.use("/api", rutasApi);
 
+/*     ----- PUG-------
+
+
 app.get("/", (req, res) => {
-  res.render("index", { mostrarProductos: false, productos: listaProductos });
+  res.render("partials/main", {
+    mostrarProductos: false,
+    productos: listaProductos,
+  });
 });
 
 app.get("/productos", (req, res) => {
-  res.render("index", { mostrarProductos: true, productos: listaProductos });
+  res.render("partials/main", {
+    mostrarProductos: true,
+    productos: listaProductos,
+  });
 });
+*/
+
 //Server listening
 const connectedServer = app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
