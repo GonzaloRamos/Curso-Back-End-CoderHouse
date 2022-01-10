@@ -33,8 +33,29 @@ app.set("view engine", "pug");
 app.set("views", path.resolve(__dirname, "./views/pug"));
 */
 
+/*          --------        EXPRESS-EJS    --------      */
+app.set("view engine", "ejs");
+app.set("views", path.resolve(__dirname, "./views/ejs"));
+
 //Rutas
 app.use("/api", rutasApi);
+
+/*        --------        Handle Bars    -------- 
+
+app.get("/", (req, res) => {
+  res.render("index", {
+    mostrarProductos: false,
+    productos: listaProductos,
+  });
+});
+
+app.get("/productos", (req, res) => {
+  res.render("index", {
+    mostrarProductos: true,
+    productos: listaProductos,
+  });
+});
+*/
 
 /*     ----- PUG-------
 
@@ -53,6 +74,20 @@ app.get("/productos", (req, res) => {
   });
 });
 */
+
+app.get("/", (req, res) => {
+  res.render("index", {
+    mostrarProductos: false,
+    productos: listaProductos,
+  });
+});
+
+app.get("/productos", (req, res) => {
+  res.render("index", {
+    mostrarProductos: true,
+    productos: listaProductos,
+  });
+});
 
 //Server listening
 const connectedServer = app.listen(PORT, () => {
