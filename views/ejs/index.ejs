@@ -25,10 +25,22 @@
     <% if (mostrarProductos) { %>
     <div class="container">
       <div class="row">
-        <% for( let item of productos) {%> 
-            <%- include("./partials/cardProduct.ejs", {item}); %>
-            <% } %>
+        <table class="table">
+          <thead>
+              <tr>
+                  <th class="col">#</th>
+                  <th class="col">Título</th>
+                  <th class="col">Precio</th>
+                  <th class="col">Imagen</th>
+              </tr>
+          </thead>
 
+          <tbody>
+        <% for( let item of productos) {%> 
+            <%- include("./partials/tableProduct.ejs", {item}); %>
+            <% } %>
+          </tbody>
+        </table>
         <div class="col">
           <a href="/" class="btn btn-primary">Volver al inicio</a>
         </div>
