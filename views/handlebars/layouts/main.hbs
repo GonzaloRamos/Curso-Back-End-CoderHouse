@@ -18,10 +18,24 @@
 {{#if mostrarProductos}}
     <div class="container row">
         <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col">#</th>
+                        <th class="col">Título</th>
+                        <th class="col">Precio</th>
+                        <th class="col">Imagen</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
             {{#each productos}}
  
-                {{> cardProduct}}
+                {{> tableProduct}}
             {{/each}}
+                </tbody>
+            </table>
             <div class="col">
             <a href="/" class="btn btn-primary">Volver al inicio</a></div>
         </div>

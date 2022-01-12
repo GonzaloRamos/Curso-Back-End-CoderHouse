@@ -1,8 +1,6 @@
 const express = require("express");
 const rutasApi = require("./router/app.routers");
 const path = require("path");
-const { engine } = require("express-handlebars");
-
 const app = express();
 const PORT = process.env.PORT || 8080;
 const listaProductos = require("./data/productos");
@@ -12,18 +10,8 @@ const listaProductos = require("./data/productos");
 
 //Views engine
 
-
-app.engine(
-  "handlebars",
-  engine({
-    extname: "hbs",
-    defaultLayout: "main.hbs",
-    layoutsDir: path.resolve(__dirname, "./views/handlebars/layouts"),
-    partialsDir: path.resolve(__dirname, "./views/handlebars/partials"),
-  })
-);
-app.set("view engine", "handlebars");
-app.set("views", path.resolve(__dirname, "./views/handlebars"));
+app.set("view engine", "pug");
+app.set("views", path.resolve(__dirname, "./views/pug"));
 
 
 
@@ -32,19 +20,18 @@ app.use("/api", rutasApi);
 
 
 app.get("/", (req, res) => {
-  res.render("index", {
+  res.render("partials/main", {
     mostrarProductos: false,
     productos: listaProductos,
   });
 });
 
 app.get("/productos", (req, res) => {
-  res.render("index", {
+  res.render("partials/main", {
     mostrarProductos: true,
     productos: listaProductos,
   });
 });
-
 
 //Server listening
 const connectedServer = app.listen(PORT, () => {

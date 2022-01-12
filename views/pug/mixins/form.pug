@@ -2,14 +2,15 @@
 mixin form
 
     form(action="/api/productos/save" method="post")
-    div.input-group
-        span(type="text" name="title" aria-label="First name" class="form-control").input-group-text Nombre y precio
+        div.input-group
+            span.input-group-text Nombre y precio
     
-        input(type="number" name="price" aria-label="Last name").form-control
+            input(type="text" name="title" aria-label="First name").form-control
+            input(type="number" name="price" aria-label="Last name").form-control
         
 
-    div.mb-3
-        label(for="exampleFormControlInput1").form-label Imagen
-        input(type="text" name="thumbnail" id="exampleFormControlInput1" placeholder="Ingresa la url").form-control
+        div.mb-3
+            label(for="exampleFormControlInput1").form-label Imagen
+            input(type="text" name="thumbnail" id="exampleFormControlInput1" placeholder="Ingresa la url").form-control
         
-    button(type="submit").btn.btn-primary Enviar
+        button(type="submit").btn.btn-primary Enviar

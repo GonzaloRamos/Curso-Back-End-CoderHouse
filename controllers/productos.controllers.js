@@ -20,8 +20,10 @@ const saveController = (req, res) => {
   const { title, price, thumbnail } = req.body;
 
   if (title && price && thumbnail) {
-    const producto = apiProducto.save({ title, price, thumbnail });
-    return res.status(201).json(producto);
+     apiProducto.save({ title, price, thumbnail });
+
+      return res.status(200).redirect("/")
+
   }
 
   return res.status(400).send("Faltan datos");
