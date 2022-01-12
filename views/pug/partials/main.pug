@@ -4,7 +4,7 @@ extends ../index
 
 block main
     include ../mixins/form
-    include ../mixins/cardProduct
+    include ../mixins/tableProduct
     h1 Desafio 4 PUG 
     hr
 
@@ -12,11 +12,19 @@ block main
         div.container
             div 
                 h2 Productos
-            div.row
-                each producto in productos
-                     +cardProduct(producto.title, producto.thumbnail, producto.price)
+            table.table 
+                thead
+                    tr
+                        th(scope="col") #
+                        th(scope="col") Nombre
+                        th(scope="col") Precio
+                        th(scope="col") Imagen
+                tbody 
 
-            a(href="/").btn.btn-primary.m-3 Volver
+                    each producto in productos
+                        +tableProduct(producto.title, producto.thumbnail, producto.price, producto.id)
+
+            a(href="/").btn.btn-primary.m-3 Volver al inicio
     else                    
         div.container
             div 
