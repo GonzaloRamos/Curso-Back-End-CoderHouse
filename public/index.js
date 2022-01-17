@@ -22,3 +22,5 @@ socket.on("chat", (messages) => {
 
   document.getElementById("messages").innerHTML = texto;
 });
+
+console.log("hola");

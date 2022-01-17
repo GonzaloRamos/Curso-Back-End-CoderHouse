@@ -10,13 +10,15 @@
   crossorigin="anonymous"
 ></script> 
 
-<h1>Desafio 4 Plantillas - HandleBars</h1>
+<h1>Desafio 5 WebSockets - HandleBars</h1>
 
 <hr />
 
+<div class="container">
+<h2>Ingresa un producto</h2>
+    {{> form}}
 
-{{#if mostrarProductos}}
-    <div class="container row">
+     
         <div class="row">
             <table class="table">
                 <thead>
@@ -37,15 +39,22 @@
                 </tbody>
             </table>
             <div class="col">
-            <a href="/" class="btn btn-primary">Volver al inicio</a></div>
-        </div>
+        
+        
     </div>
-{{else}}
-<h2>Ingresa un producto</h2>
-    {{> form}}
-    <a href="/productos"> <button class="btn btn-primary">Mostrar productos</button></a>
 
-{{/if}} 
+        <form action="">
+      <input type="text" name="nombre" id="nombre" />
+      <input type="text" name="mensaje" id="mensaje" />
+      <button type="submit" id="send">Enviar</button>
+    </form>
+
+    <div id="chat">
+      <ul id="messages"></ul>
+    </div>
+
+</div>
+
 
 
 
