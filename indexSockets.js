@@ -6,12 +6,19 @@ const io = require("socket.io")(server);
 
 app.use(express.static(__dirname + "/public"));
 
+const chat = [];
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
 io.on("connection", (socket) => {
   console.log("connected");
+
+  socket.on("incomingMessage", (message) => {
+    chat.push(message);
+    io.sockets.emit("chat", chat);
+  });
 });
 
 server.listen(3000, () => {
