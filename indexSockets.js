@@ -3,12 +3,15 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
-const { engine } = require("express-handlebars");
 const path = require("path");
 const rutasApi = require("./router/app.routers");
 const listaProductos = require("./data/productos");
 
-const chat = [];
+const chat = require("./data/chat");
+
+const emitMensaje = () => {
+  io.sockets.emit("chat", chat);
+};
 
 app.use(express.static(__dirname + "/public"));
 //Rutas
@@ -19,10 +22,12 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("connected");
-
+  emitMensaje();
   socket.on("incomingMessage", (message) => {
-    chat.push(message);
-    io.sockets.emit("chat", chat);
+    if (message.email) {
+      chat.push(message);
+      emitMensaje();
+    }
   });
 
   socket.emit("onLoad", listaProductos);
