@@ -10,34 +10,11 @@ const listaProductos = require("./data/productos");
 
 const chat = [];
 
-app.engine(
-  "handlebars",
-  engine({
-    extname: "hbs",
-    defaultLayout: "main.hbs",
-    layoutsDir: path.resolve(__dirname, "./views/handlebars/layouts"),
-    partialsDir: path.resolve(__dirname, "./views/handlebars/partials"),
-  })
-);
-app.set("view engine", "handlebars");
-app.set("views", path.resolve(__dirname, "./views/handlebars"));
-
 app.use(express.static(__dirname + "/public"));
 //Rutas
 app.use("/api", rutasApi);
-
 app.get("/", (req, res) => {
-  res.render("index", {
-    mostrarProductos: false,
-    productos: listaProductos,
-  });
-});
-
-app.get("/productos", (req, res) => {
-  res.render("index", {
-    mostrarProductos: true,
-    productos: listaProductos,
-  });
+  res.sendFile(path.resolve(__dirname, "./public/index.html"));
 });
 
 io.on("connection", (socket) => {
@@ -47,6 +24,8 @@ io.on("connection", (socket) => {
     chat.push(message);
     io.sockets.emit("chat", chat);
   });
+
+  socket.emit("onLoad", listaProductos);
 });
 
 server.listen(3000, () => {

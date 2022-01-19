@@ -1,6 +1,6 @@
 const socket = io();
 
-const button = document.getElementById("send");
+const button = document.getElementById("buttonSend");
 
 const sendMesaage = (e) => {
   e.preventDefault();
@@ -13,6 +13,16 @@ const sendMesaage = (e) => {
 
 button.addEventListener("click", sendMesaage);
 
+socket.on("onLoad", (productos) => {
+  fetch("http://localhost:3000/template/productos.tpl")
+    .then((res) => res.text())
+    .then((data) => {
+      const template = Handlebars.compile(data);
+      const html = template({ productos });
+      document.getElementById("dataProductos").innerHTML = html;
+    });
+});
+
 socket.on("chat", (messages) => {
   const texto = messages
     .map((mensaje) => {
@@ -22,5 +32,3 @@ socket.on("chat", (messages) => {
 
   document.getElementById("messages").innerHTML = texto;
 });
-
-console.log("hola");
