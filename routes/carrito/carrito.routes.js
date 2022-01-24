@@ -1,11 +1,9 @@
 import { Router } from "express";
 
-const carrito = Router();
+const routeCarrito = Router();
 
-carrito.use("/carrito");
-
-carrito.get("/", (req, res) => {
-  res.send("HOLAAA DESDE CARRITO");
+routeCarrito.get("/", (req, res) => {
+  res.send("HOLAAA DESDE CARRUTI");
 });
 
-export default carrito;
+export default routeCarrito;

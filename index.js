@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import router from "./routes/index.js";
+import router from "./routes/index.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 8080;

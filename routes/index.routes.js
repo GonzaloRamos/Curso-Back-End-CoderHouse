@@ -1,9 +1,9 @@
 import { Router } from "express";
-import carrito from "./carrito/carrito.routes";
+import routeCarrito from "./carrito/carrito.routes.js";
 
 const router = Router();
 
-router.use("/", carrito);
+router.use("/carrito", routeCarrito);
 
 router.get("/", (req, res) => {
   res.send("HOLAAA");
