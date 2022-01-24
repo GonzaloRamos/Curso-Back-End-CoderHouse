@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-handlebars": "^6.0.2",
+    "pug": "^3.0.2",
+    "socket.io": "^4.4.1",
+    "uuid": "^8.3.2"
+  },
+  "name": "desafio-filesystenm",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Gonzalo Ramos",
+  "license": "ISC",
+  "description": ""
+}
