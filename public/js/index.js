@@ -4,9 +4,10 @@ const button = document.getElementById("buttonSend");
 
 const sendMesaage = (e) => {
   e.preventDefault();
-  const inputMsj = documen.getElementById("mensaje");
+  const inputMsj = document.getElementById("mensaje");
+  const inputMail = document.getElementById("email");
   const message = {
-    email: document.getElementById("email").value,
+    email: inputMail.value,
     anio: new Date().getFullYear(),
     hora:
       new Date().getHours() +

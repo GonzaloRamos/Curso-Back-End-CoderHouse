@@ -6,11 +6,15 @@ const io = require("socket.io")(server);
 const path = require("path");
 const rutasApi = require("./router/app.routers");
 const listaProductos = require("./data/productos");
+const Chat = require("./data/chat");
 
-const chat = require("./data/chat");
+const chat = new Chat();
 
 const emitMensaje = () => {
-  io.sockets.emit("chat", chat);
+  const mensaje = chat.getMessage();
+  mensaje.then((data) => {
+    io.sockets.emit("chat", data);
+  });
 };
 
 app.use(express.static(__dirname + "/public"));
@@ -21,16 +25,15 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("connected");
   emitMensaje();
   socket.on("incomingMessage", (message) => {
     if (message.email) {
-      chat.push(message);
+      chat.addMessage(message);
       emitMensaje();
     }
   });
 
-  socket.emit("onLoad", listaProductos);
+  socket.broadcast.emit("onLoad", listaProductos);
 });
 
 server.listen(3000, () => {
