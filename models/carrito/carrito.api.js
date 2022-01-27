@@ -32,6 +32,24 @@ export class Carrito {
     return carrito.id;
   }
 
+  getAllProducts(id) {
+    const index = this.carrito.findIndex((carrito) => carrito.id === id);
+    if (index >= 0) {
+      return this.carrito[index].productos;
+    }
+    return [];
+  }
+
+  addProducto(id, producto) {
+    const index = this.carrito.findIndex((carrito) => carrito.id === id);
+    if (index >= 0) {
+      this.carrito[index].productos.push(producto);
+      this.saveToJson();
+      return true;
+    }
+    return;
+  }
+
   delete(id) {
     const index = this.carrito.findIndex((carrito) => carrito.id === id);
     if (index >= 0) {
@@ -41,10 +59,6 @@ export class Carrito {
       return true;
     }
     return;
-  }
-
-  getAllProductos() {
-    return this.productos;
   }
 
   saveToJson() {

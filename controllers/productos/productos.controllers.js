@@ -44,7 +44,9 @@ const updateProductController = (req, res) => {
       precio,
       stock,
     });
-    return res.status(200).json({message: `Se actualizo con los siguientes datos: ${producto}`});
+    return res
+      .status(200)
+      .json({message: `Se actualizo con los siguientes datos: ${producto}`});
   }
   return res.status(400).json({error: "No se proporciono ningun dato"});
 };
@@ -54,7 +56,9 @@ const deleteProductController = (req, res) => {
   if (id) {
     const producto = productosApi.deleteProducto(id);
     if (producto) {
-      return res.status(200).json({message: `Se elimino el producto con id: ${id}`});
+      return res
+        .status(200)
+        .json({message: `Se elimino el producto con id: ${id}`});
     }
     return res.status(400).json({error: "No se encontro el producto"});
   }
@@ -66,4 +70,5 @@ export {
   addProductController,
   updateProductController,
   deleteProductController,
+  productosApi,
 };
