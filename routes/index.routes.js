@@ -1,7 +1,8 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 import routeCarrito from "./carrito/carrito.routes.js";
-import routeProductos from "./productos/productos.routes.js";
+import routerProductosPrivate from "./productos/private/productosPrivate.routes.js";
+import routeProductosPublic from "./productos/public/productosPublic.routes.js";
 
 const router = express.Router();
 
@@ -10,7 +11,8 @@ router.use(express.urlencoded({ extended: true }));
 
 //Rutas
 router.use("/api/carrito", routeCarrito);
-router.use("/api/productos", authMiddleware, routeProductos);
+router.use("/api/productos", routeProductosPublic);
+router.use("/api/productos", authMiddleware, routerProductosPrivate);
 
 router.get("/", (req, res) => {
   res.send("HOLAAA");

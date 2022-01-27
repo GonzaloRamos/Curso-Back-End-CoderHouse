@@ -1,74 +1,57 @@
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 import fs from "fs/promises";
 
 export class Carrito {
-  constructor(id = uuidv4()) {
+  constructor() {
+    this.carrito = [];
     this.open();
-    this.id = id;
-    this.timeStamp = Date.now();
-    this.productos = [];
-    this.jsonCarrito = [];
   }
 
   open() {
     try {
       const load = async () => {
         const data = await fs.readFile("./data/carrito.json", "utf-8");
-        this.jsonCarrito = JSON.parse(data);
-
-        const index = this.jsonCarrito.findIndex(
-          (carrito) => carrito.id === this.id
-        );
-        if (index === -1) {
-          this.jsonCarrito.push({
-            id: this.id,
-            timeStamp: this.timeStamp,
-            productos: this.productos,
-          });
-          fs.writeFile(
-            "data/carrito.json",
-            JSON.stringify(this.jsonCarrito, null, 2),
-            "utf-8"
-          );
-        } else {
-          const { timeStamp, productos } = this.jsonCarrito[index];
-          this.timeStamp = timeStamp;
-          this.productos = productos;
-        }
+        this.carrito = JSON.parse(data);
       };
 
       load();
     } catch (error) {
       console.log(error.message);
+      this.carritos = [];
     }
   }
 
+  createCarrito() {
+    const carrito = {
+      id: uuidv4(),
+      timeStamp: Date.now(),
+      productos: [],
+    };
+    this.carrito.push(carrito);
+    this.saveToJson();
+    return carrito.id;
+  }
+
   delete(id) {
-    try {
-      this.jsonCarrito.filter((carrito) => carrito.id !== id);
-      fs.writeFile(
-        "./data/carrito.json",
-        JSON.stringify(this.jsonCarrito, null, 2),
-        "utf-8"
-      );
-    } catch (error) {
-      console.log(error.message);
+    const index = this.carrito.findIndex((carrito) => carrito.id === id);
+    if (index >= 0) {
+      const newList = this.carrito.filter((carrito) => carrito.id !== id);
+      this.carrito = newList;
+      this.saveToJson();
+      return true;
     }
+    return;
   }
 
   getAllProductos() {
     return this.productos;
   }
 
-  save(obj) {
+  saveToJson() {
     try {
-      const index = this.jsonCarrito.findIndex(
-        (carrito) => carrito.id === this.id
-      );
-      this.jsonCarrito[index].productos.push(obj);
       fs.writeFile(
         "./data/carrito.json",
-        JSON.stringify(this.jsonCarrito, null, 2),
+        JSON.stringify(this.carrito, null, 2),
         "utf-8"
       );
     } catch (error) {

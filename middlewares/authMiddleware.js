@@ -1,4 +1,4 @@
-const userAdmin = false;
+const userAdmin = true;
 
 export const authMiddleware = (req, res, next) => {
   userAdmin

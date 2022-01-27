@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
+import {v4 as uuidv4} from "uuid";
 import fs from "fs/promises";
 
 export default class ApiProductos {
@@ -27,7 +27,7 @@ export default class ApiProductos {
     return this.productos;
   }
   save(producto) {
-    const itemComplete = { id: uuidv4(), ...producto };
+    const itemComplete = {id: uuidv4(), timeStamp: Date.now(), ...producto};
     this.productos.push(itemComplete);
     this.saveToJson();
 
@@ -36,15 +36,14 @@ export default class ApiProductos {
 
   updateProducto(id, producto) {
     const index = this.productos.findIndex((producto) => producto.id === id);
-    this.productos[index] = { id, ...producto };
+    this.productos[index] = {id, ...producto};
 
     this.saveToJson();
   }
 
   deleteProducto(id) {
-    const productExist = this.productos.includes(
-      (producto) => producto.id === id
-    );
+    const productExist = this.productos.includes((producto) => producto.id === id);
+    console.log(this.productos);
 
     if (productExist) {
       const newList = this.productos.filter((producto) => producto.id !== id);
@@ -57,15 +56,8 @@ export default class ApiProductos {
 
   saveToJson() {
     const save = async () => {
-      await fs.writeFile(
-        "./data/productos.json",
-        JSON.stringify(this.productos),
-        null,
-        2
-      );
+      await fs.writeFile("./data/productos.json", JSON.stringify(this.productos), null, 2);
     };
     save();
   }
 }
-
-module.exports = ApiProductos;
