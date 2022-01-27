@@ -61,6 +61,25 @@ export class Carrito {
     return;
   }
 
+  deleteProducto(id, idProducto) {
+    const index = this.carrito.findIndex((carrito) => carrito.id === id);
+    if (index >= 0) {
+      const indexProducto = this.carrito[index].productos.findIndex(
+        (producto) => producto.id === idProducto
+      );
+      if (indexProducto >= 0) {
+        const newList = this.carrito[index].productos.filter(
+          (producto) => producto.id !== idProducto
+        );
+        this.carrito[index].productos = newList;
+        this.saveToJson();
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
   saveToJson() {
     try {
       fs.writeFile(

@@ -7,28 +7,7 @@
   {
     "id": "1330b3b5-c569-4ecf-bad3-a62a67c9cf71",
     "timeStamp": 1643242522599,
-    "productos": [
-      {
-        "id": "26b16a56-6ff3-4bae-bf83-a2a913041461",
-        "timeStamp": 1643218970158,
-        "nombre": "lalala",
-        "descripcion": "mac",
-        "codigo": 321,
-        "fotoUrl": "asjdak",
-        "precio": 500,
-        "stock": 10
-      },
-      {
-        "id": "26b16a56-6ff3-4bae-bf83-a2a913041461",
-        "timeStamp": 1643218970158,
-        "nombre": "lalala",
-        "descripcion": "mac",
-        "codigo": 321,
-        "fotoUrl": "asjdak",
-        "precio": 500,
-        "stock": 10
-      }
-    ]
+    "productos": []
   },
   {
     "id": "769d7f3d-2bd5-4dc1-b62e-b82584600472",

@@ -53,9 +53,24 @@ const addProductoToCarritoController = (req, res) => {
   return res.status(400).json({error: "No se proporciono ningun id"});
 };
 
+const deleteProductoController = (req, res) => {
+  const {id, idProducto} = req.params;
+  if (id && idProducto) {
+    const producto = carritoApi.deleteProducto(id, idProducto);
+    if (producto) {
+      return res
+        .status(200)
+        .json({message: `Se elimino el producto con id: ${idProducto}`});
+    }
+    return res.status(400).json({error: "No se encontro el producto"});
+  }
+  return res.status(400).json({error: "No se proporciono ningun id"});
+};
+
 export {
   createCarritoController,
   deleteCarritoController,
   getAllProductsController,
   addProductoToCarritoController,
+  deleteProductoController,
 };
