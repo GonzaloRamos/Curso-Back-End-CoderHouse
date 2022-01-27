@@ -8,5 +8,25 @@
     "fotoUrl": "asjdak",
     "precio": 500,
     "stock": 10
+  },
+  {
+    "id": "42310e48-e052-475b-b2dc-ff3ae423a8f5",
+    "timeStamp": 1643256357137,
+    "nombre": "Tablet",
+    "descripcion": "Ideal para diseño grafico",
+    "codigo": 365,
+    "fotoUrl": "https://images.samsung.com/is/image/samsung/p6pim/ar/sm-t500nzaearo/gallery/ar-galaxy-tab-a7-t500-sm-t500nzaearo-332818011?$720_576_PNG$",
+    "precio": 1000,
+    "stock": 10
+  },
+  {
+    "id": "67735e95-ea8c-4dd5-968c-3b7942c67841",
+    "timeStamp": 1643256439629,
+    "nombre": "Presonus Eris 5",
+    "descripcion": "Mejores parlante para home studio",
+    "codigo": 500,
+    "fotoUrl": "https://pae-web.presonusmusic.com/uploads/products/media/images/eris_e5-website-01-mobile.jpg",
+    "precio": 2500,
+    "stock": 50
   }
 ]
