@@ -1,5 +1,9 @@
-const { ProductosApi } = require("../models/index");
-const apiProducto = new ProductosApi();
+// const { ProductosApi } = require("../models/index");
+// const apiProducto = new ProductosApi();
+
+const Database = require("../database/database");
+const config = require("../database/config");
+const apiProducto = new Database(config, "productos");
 
 const getAllController = (req, res) => {
   const productos = apiProducto.getAll();
@@ -7,34 +11,33 @@ const getAllController = (req, res) => {
 };
 
 const getByIdController = (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
   const producto = apiProducto.getById(id);
   if (producto) {
     return res.status(200).json(producto);
   }
 
-  return res.status(404).json({ error: "Producto no encontrado" });
+  return res.status(404).json({error: "Producto no encontrado"});
 };
 
 const saveController = (req, res) => {
-  const { title, price, thumbnail } = req.body;
+  const {title, price, thumbnail} = req.body;
 
   if (title && price && thumbnail) {
-     apiProducto.save({ title, price, thumbnail });
+    apiProducto.save({title, price, imageURL: thumbnail});
 
-      return res.status(200).redirect("/")
-
+    return res.status(200).redirect("/");
   }
 
   return res.status(400).send("Faltan datos");
 };
 
 const updateController = (req, res) => {
-  const { id } = req.params;
-  const { title, price, thumbnail } = req.body;
+  const {id} = req.params;
+  const {title, price, thumbnail} = req.body;
 
   if (title && price && thumbnail) {
-    apiProducto.updateProducto(id, { title, price, thumbnail });
+    apiProducto.updateProducto(id, {title, price, thumbnail});
     return res.status(200).send("Producto actualizado");
   }
 
@@ -42,18 +45,18 @@ const updateController = (req, res) => {
 };
 
 const deleteController = (req, res) => {
-  const { id } = req.params;
+  const {id} = req.params;
 
   if (id) {
     const productoMensaje = apiProducto.deleteProducto(id);
 
     if (productoMensaje) {
-      return res.status(200).json({ mensaje: "Producto eliminado" });
+      return res.status(200).json({mensaje: "Producto eliminado"});
     }
-    return res.status(404).json({ mensaje: "Producto no encontrado" });
+    return res.status(404).json({mensaje: "Producto no encontrado"});
   }
 
-  return res.status(404).json({ mensaje: "Se debe proporcionar un id" });
+  return res.status(404).json({mensaje: "Se debe proporcionar un id"});
 };
 
 module.exports = {
