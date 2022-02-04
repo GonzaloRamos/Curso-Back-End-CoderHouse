@@ -1,18 +1,14 @@
-// const { ProductosApi } = require("../models/index");
-// const apiProducto = new ProductosApi();
+const {ProductosApi} = require("../models/index");
+const apiProducto = new ProductosApi("productos");
 
-const Database = require("../database/database");
-const config = require("../database/config");
-const apiProducto = new Database(config, "productos");
-
-const getAllController = (req, res) => {
-  const productos = apiProducto.getAll();
+const getAllController = async (req, res) => {
+  const productos = await apiProducto.getAll();
   return res.status(200).json(productos);
 };
 
-const getByIdController = (req, res) => {
+const getByIdController = async (req, res) => {
   const {id} = req.params;
-  const producto = apiProducto.getById(id);
+  const producto = await apiProducto.getById(id);
   if (producto) {
     return res.status(200).json(producto);
   }
@@ -20,11 +16,10 @@ const getByIdController = (req, res) => {
   return res.status(404).json({error: "Producto no encontrado"});
 };
 
-const saveController = (req, res) => {
+const saveController = async (req, res) => {
   const {title, price, thumbnail} = req.body;
-
   if (title && price && thumbnail) {
-    apiProducto.save({title, price, imageURL: thumbnail});
+    await apiProducto.save({title, price, imageURL: thumbnail});
 
     return res.status(200).redirect("/");
   }
@@ -32,25 +27,28 @@ const saveController = (req, res) => {
   return res.status(400).send("Faltan datos");
 };
 
-const updateController = (req, res) => {
+const updateController = async (req, res) => {
   const {id} = req.params;
   const {title, price, thumbnail} = req.body;
 
   if (title && price && thumbnail) {
-    apiProducto.updateProducto(id, {title, price, thumbnail});
-    return res.status(200).send("Producto actualizado");
+    const result = apiProducto.updateProducto(id, {title, price, thumbnail});
+    if (result) {
+      return res.status(200).send("Producto actualizado");
+    }
+    return res.status(404).send("Producto no encontrado");
   }
 
   return res.status(400).send("Faltan datos");
 };
 
-const deleteController = (req, res) => {
+const deleteController = async (req, res) => {
   const {id} = req.params;
 
   if (id) {
-    const productoMensaje = apiProducto.deleteProducto(id);
+    const result = await apiProducto.deleteProducto(id);
 
-    if (productoMensaje) {
+    if (result) {
       return res.status(200).json({mensaje: "Producto eliminado"});
     }
     return res.status(404).json({mensaje: "Producto no encontrado"});

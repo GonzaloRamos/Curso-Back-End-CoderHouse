@@ -5,10 +5,11 @@ const server = http.createServer(app);
 const io = require("socket.io")(server);
 const path = require("path");
 const rutasApi = require("./router/app.routers");
-const listaProductos = require("./data/productos");
-const Chat = require("./data/chat");
 
-const chat = new Chat();
+const {ProductosApi, ChatApi} = require("./models/index");
+
+const chat = new ChatApi("chat");
+const productos = new ProductosApi("productos");
 
 const emitMensaje = () => {
   const mensaje = chat.getMessage();
@@ -20,20 +21,21 @@ const emitMensaje = () => {
 app.use(express.static(__dirname + "/public"));
 //Rutas
 app.use("/api", rutasApi);
+
 app.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "./public/index.html"));
 });
 
-io.on("connection", (socket) => {
+io.on("connection", async (socket) => {
   emitMensaje();
-  socket.on("incomingMessage", (message) => {
+  socket.on("incomingMessage", async (message) => {
     if (message.email) {
-      chat.addMessage(message);
+      await chat.addMessage(message);
       emitMensaje();
     }
   });
 
-  socket.broadcast.emit("onLoad", listaProductos);
+  socket.broadcast.emit("onLoad", await productos.getAll());
 });
 
 server.listen(3000, () => {

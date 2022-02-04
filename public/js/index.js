@@ -29,7 +29,7 @@ socket.on("onLoad", (productos) => {
     .then((res) => res.text())
     .then((data) => {
       const template = Handlebars.compile(data);
-      const html = template({ productos });
+      const html = template({productos});
       document.getElementById("dataProductos").innerHTML = html;
     });
 });

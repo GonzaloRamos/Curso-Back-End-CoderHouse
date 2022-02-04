@@ -1,53 +1,77 @@
-const productosList = require("../../data/productos");
-const { v4: uuidv4 } = require("uuid");
-class ApiProductos {
-  constructor() {
-    this.productos = [];
-    this.load();
+const configMariaDB = require("../../database/configMariaDB");
+class Productos {
+  constructor(tableName) {
+    this.knex = require("knex")(configMariaDB);
+    this.tableName = tableName;
+    this.open();
   }
 
-  load() {
+  open() {
+    this.knex.schema.hasTable(this.tableName).then((exists) => {
+      if (!exists) {
+        this.knex.schema
+          .createTable(this.tableName, (table) => {
+            table.increments("id");
+            table.string("title");
+            table.integer("price");
+            table.string("imageURL");
+          })
+          .then(() => {
+            console.log("Tabla creada");
+          })
+          .catch((err) => console.log(err));
+      }
+    });
+  }
+
+  async getAll() {
     try {
-      const load = async () => {
-        this.productos = await productosList;
-      };
-      load();
+      const result = await this.knex.from(this.tableName).select("*");
+      return result;
     } catch (error) {
       console.log(error.message);
-      this.productos = [];
     }
   }
 
-  getAll() {
-    return this.productos;
-  }
-  save(producto) {
-    const itemComplete = { id: uuidv4(), ...producto };
-    this.productos.push(itemComplete);
-
-    return itemComplete;
-  }
-  getById(id) {
-    return this.productos.find((producto) => producto.id === id);
-  }
-
-  updateProducto(id, producto) {
-    const index = this.productos.findIndex((producto) => producto.id === id);
-    this.productos[index] = { id, ...producto };
+  async getById(id) {
+    try {
+      const result = await this.knex.from(this.tableName).select("*").where("id", id);
+      if (result.length === 0) {
+        return null;
+      }
+      return result;
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
-  deleteProducto(id) {
-    const productExist = this.productos.includes(
-      (producto) => producto.id === id
-    );
+  async save(producto) {
+    try {
+      await this.knex(this.tableName).insert(producto);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
-    if (productExist) {
-      const newList = this.productos.filter((producto) => producto.id !== id);
-      this.productos = newList;
+  async updateProducto(id, producto) {
+    try {
+      await this.knex(this.tableName).where("id", id).update(producto);
       return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
     }
-    return;
+  }
+
+  async deleteProducto(id) {
+    try {
+      await this.knex(this.tableName).where("id", id).del();
+      return true;
+    } catch (error) {
+      console.log(error.message);
+      return false;
+    }
   }
 }
 
-module.exports = ApiProductos;
+module.exports = Productos;
