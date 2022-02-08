@@ -24,15 +24,15 @@ const sendMesaage = (e) => {
 
 button.addEventListener("click", sendMesaage);
 
-socket.on("onLoad", (productos) => {
-  fetch("http://localhost:3000/template/productos.tpl")
-    .then((res) => res.text())
-    .then((data) => {
-      const template = Handlebars.compile(data);
-      const html = template({productos});
-      document.getElementById("dataProductos").innerHTML = html;
-    });
-});
+// socket.on("onLoad", (productos) => {
+//   fetch("http://localhost:3000/template/productos.tpl")
+//     .then((res) => res.text())
+//     .then((data) => {
+//       const template = Handlebars.compile(data);
+//       const html = template({productos});
+//       document.getElementById("dataProductos").innerHTML = html;
+//     });
+// });
 
 socket.on("chat", (messages) => {
   const texto = messages
@@ -43,3 +43,22 @@ socket.on("chat", (messages) => {
 
   document.getElementById("messages").innerHTML = texto;
 });
+
+(async () => {
+  const productos = await fetch("http://localhost:3000/api/productos", {
+    headers: {"Content-Type": "application/json"},
+  });
+
+  if (productos.status === 200) {
+    const productosJson = await productos.json();
+    console.log(productosJson);
+
+    fetch("http://localhost:3000/template/productos.tpl")
+      .then((res) => res.text())
+      .then((data) => {
+        const template = Handlebars.compile(data);
+        const html = template({productosJson});
+        document.getElementById("dataProductos").innerHTML = html;
+      });
+  }
+})();

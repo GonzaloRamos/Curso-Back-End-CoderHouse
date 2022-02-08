@@ -34,8 +34,6 @@ io.on("connection", async (socket) => {
       emitMensaje();
     }
   });
-
-  socket.broadcast.emit("onLoad", await productos.getAll());
 });
 
 server.listen(3000, () => {
