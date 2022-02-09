@@ -6,10 +6,9 @@ const io = require("socket.io")(server);
 const path = require("path");
 const rutasApi = require("./router/app.routers");
 
-const {ProductosApi, ChatApi} = require("./models/index");
+const {ChatApi} = require("./models/index");
 
 const chat = new ChatApi("chat");
-const productos = new ProductosApi("productos");
 
 const emitMensaje = () => {
   const mensaje = chat.getMessage();

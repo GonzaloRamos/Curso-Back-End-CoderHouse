@@ -1,7 +1,7 @@
 const options = {
-  client: "better-sqlite3",
+  client: "sqlite3",
   connection: {
-    filename: "./database/chat.sqlite",
+    filename: "./database/chat.sqlite3",
   },
   useNullAsDefault: true,
 };
