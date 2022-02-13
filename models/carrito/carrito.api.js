@@ -17,7 +17,7 @@ export class Carrito {
       load();
     } catch (error) {
       console.log(error.message);
-      this.carritos = [];
+      this.carrito = [];
     }
   }
 
@@ -82,11 +82,7 @@ export class Carrito {
 
   saveToJson() {
     try {
-      fs.writeFile(
-        "./data/carrito.json",
-        JSON.stringify(this.carrito, null, 2),
-        "utf-8"
-      );
+      fs.writeFile("./data/carrito.json", JSON.stringify(this.carrito, null, 2), "utf-8");
     } catch (error) {
       console.log(error.message);
     }
