@@ -1,6 +1,7 @@
-import {ProductosModel} from "../../models/mongoDB/ProductosSchema";
-import ApiProductos from "../../models/productos/productos.api";
-class ProductosDao extends ApiProductos {
+import {ProductosModel} from "../../models/mongoDB/ProductosSchema.js";
+import ApiProductos from "../../models/productos/productos.api.js";
+
+export default class ProductosDao extends ApiProductos {
   constructor() {
     super();
     this.model = ProductosModel;
@@ -8,8 +9,8 @@ class ProductosDao extends ApiProductos {
 
   async save(producto) {
     try {
-      const productoComplete = {id: uuidv4(), timeStamp: Date.now(), ...producto};
-      await ProductosModel.create(productoComplete);
+      const productoComplete = {timeStamp: Date.now(), ...producto};
+      return await ProductosModel.create(productoComplete);
     } catch (error) {
       console.log(error.message);
     }

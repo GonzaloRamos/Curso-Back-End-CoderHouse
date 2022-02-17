@@ -4,7 +4,7 @@ const Schema = Mongoose.Schema;
 const collection = "productos";
 
 const ProductosSchema = new Schema({
-  id: Mongoose.objectId,
+  id: Mongoose.ObjectId,
   timeStamp: {type: Number, required: true, unique: true},
   nombre: {type: String, required: true},
   descripcion: {type: String, required: true},

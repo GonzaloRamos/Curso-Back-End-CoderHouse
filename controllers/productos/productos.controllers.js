@@ -1,6 +1,9 @@
-import ApiProductos from "../../models/productos/productos.api.js";
-const productosApi = new ApiProductos();
+// import ApiProductos from "../../models/productos/productos.api.js";
+// const productosApi = new ApiProductos();
 
+import ProductosDao from "../../daos/productos/ProductosDao.js";
+
+const productosApi = new ProductosDao();
 const getAllProductsController = async (req, res) => {
   const {id} = req.params;
 
@@ -56,9 +59,7 @@ const deleteProductController = (req, res) => {
   if (id) {
     const producto = productosApi.deleteProducto(id);
     if (producto) {
-      return res
-        .status(200)
-        .json({message: `Se elimino el producto con id: ${id}`});
+      return res.status(200).json({message: `Se elimino el producto con id: ${id}`});
     }
     return res.status(400).json({error: "No se encontro el producto"});
   }
