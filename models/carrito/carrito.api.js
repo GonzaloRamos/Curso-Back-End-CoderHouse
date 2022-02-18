@@ -1,7 +1,7 @@
 import {v4 as uuidv4} from "uuid";
 import fs from "fs/promises";
 
-export class Carrito {
+export default class ApiCarrito {
   constructor() {
     this.carrito = [];
     this.open();

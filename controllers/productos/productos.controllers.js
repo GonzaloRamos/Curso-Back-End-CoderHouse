@@ -1,9 +1,5 @@
-// import ApiProductos from "../../models/productos/productos.api.js";
-// const productosApi = new ApiProductos();
+import {productosDao as productosApi} from "../../models/daos/index.js";
 
-import ProductosDao from "../../daos/productos/ProductosDao.js";
-
-const productosApi = new ProductosDao();
 const getAllProductsController = async (req, res) => {
   const {id} = req.params;
 

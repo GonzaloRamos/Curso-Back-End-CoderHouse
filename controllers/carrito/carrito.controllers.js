@@ -1,7 +1,4 @@
-import {Carrito} from "../../models/carrito/carrito.api.js";
-import {productosApi} from "../productos/productos.controllers.js";
-
-const carritoApi = new Carrito();
+import {carritoDao as carritoApi} from "../../models/daos/index.js";
 
 const createCarritoController = (req, res) => {
   const id = carritoApi.createCarrito();
@@ -13,9 +10,7 @@ const deleteCarritoController = (req, res) => {
   if (id) {
     const carrito = carritoApi.delete(id);
     if (carrito) {
-      return res
-        .status(200)
-        .json({message: `Se elimino el carrito con id: ${id}`});
+      return res.status(200).json({message: `Se elimino el carrito con id: ${id}`});
     }
     return res.status(400).json({error: "No se encontro el carrito"});
   }

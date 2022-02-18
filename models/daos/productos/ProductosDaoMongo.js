@@ -1,8 +1,8 @@
 import Mongoose from "mongoose";
+import MongoDBContainer from "../../containers/MongoDBContainer";
 
 const Schema = Mongoose.Schema;
 const collection = "productos";
-
 const ProductosSchema = new Schema({
   id: Mongoose.ObjectId,
   timeStamp: {type: Number, required: true, unique: true},
@@ -14,4 +14,8 @@ const ProductosSchema = new Schema({
   stock: {type: Number, required: true},
 });
 
-export const ProductosModel = Mongoose.model(collection, ProductosSchema);
+export default class ProductosDaoMongoDB extends MongoDBContainer {
+  constructor() {
+    super(collection, ProductosSchema);
+  }
+}
