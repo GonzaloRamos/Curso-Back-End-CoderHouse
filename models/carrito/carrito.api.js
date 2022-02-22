@@ -16,8 +16,8 @@ export default class ApiCarrito {
 
       load();
     } catch (error) {
-      console.log(error.message);
       this.carrito = [];
+      throw new Error(error);
     }
   }
 
@@ -80,11 +80,15 @@ export default class ApiCarrito {
     return false;
   }
 
-  saveToJson() {
+  async saveToJson() {
     try {
-      fs.writeFile("./data/carrito.json", JSON.stringify(this.carrito, null, 2), "utf-8");
+      await fs.writeFile(
+        "./data/carrito.json",
+        JSON.stringify(this.carrito, null, 2),
+        "utf-8"
+      );
     } catch (error) {
-      console.log(error.message);
+      throw new Error(error);
     }
   }
 }

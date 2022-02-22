@@ -8,41 +8,52 @@ class MongoDBContainer {
     this.model = Mongoose.model(collection, schema);
   }
 
-  async save(producto) {
+  async createData(data) {
     try {
-      const productoComplete = {timeStamp: Date.now(), ...producto};
-      return await this.model.create(productoComplete);
+      const dataComplete = {timeStamp: Date.now(), ...data};
+      return await this.model.create(dataComplete);
     } catch (error) {
-      console.log(error.message);
+      throw new Error(`No se pudo guardar: ${error}`);
     }
   }
 
-  async getAllOrById(id) {
+  async getAllDataOrById(id) {
     try {
       if (id) {
-        return await this.model.findById(id);
+        const result = await this.model.findById(id);
+
+        if (!result) {
+          throw new Error(
+            `No se encontro el documento con id: ${id}. En su lugar se obtuvo ${result}`
+          );
+        }
+        return result;
       }
-      return await this.model.find();
+      return await this.model.find({});
     } catch (error) {
-      console.log(error.message);
+      throw new Error(`Error al obtener todos los datos: ${error}`);
     }
   }
 
-  async updateProducto(id, producto) {
+  async updateData(id, data) {
     try {
-      const productoUpdate = await this.model.findByIdAndUpdate(id, producto, "after");
-      return productoUpdate;
+      const dataUpdate = await this.model.findByIdAndUpdate(id, data, {
+        new: true,
+      });
+      if (!dataUpdate) {
+        throw new Error(`No se encontro información con id: ${id}`);
+      }
+      return dataUpdate;
     } catch (error) {
-      console.log(error.message);
+      throw new Error(`Error al actualizar: ${error}`);
     }
   }
 
-  async deleteProducto(id) {
+  async deleteData(id) {
     try {
-      const productoDelete = await this.model.findByIdAndDelete(id);
-      return productoDelete;
+      await this.model.findByIdAndDelete(id);
     } catch (error) {
-      console.log(error.message);
+      throw new Error(`No se pudo eliminar: ${error}`);
     }
   }
 }

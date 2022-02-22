@@ -9,8 +9,8 @@ const routerProductosPrivate = express.Router();
 
 routerProductosPrivate.post("/", addProductController);
 
-routerProductosPrivate.put("/:id", updateProductController);
+routerProductosPrivate.put("/:idProducto?", updateProductController);
 
-routerProductosPrivate.delete("/:id", deleteProductController);
+routerProductosPrivate.delete("/:idProducto?", deleteProductController);
 
 export default routerProductosPrivate;

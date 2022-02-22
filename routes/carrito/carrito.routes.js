@@ -3,23 +3,23 @@ import {
   addProductoToCarritoController,
   createCarritoController,
   deleteCarritoController,
-  deleteProductoController,
-  getAllProductsController,
+  deleteProductFromCarritoController,
+  getAllProductsFromCarritoController,
 } from "../../controllers/carrito/carrito.controllers.js";
 
 const routeCarrito = Router();
 
 routeCarrito.post("/", createCarritoController);
 
-routeCarrito.delete("/:id?", deleteCarritoController);
+routeCarrito.delete("/:idCarrito?", deleteCarritoController);
 
-routeCarrito.delete("/:id?/productos/:idProducto", deleteProductoController);
-
-routeCarrito.get("/:id?/productos", getAllProductsController);
-
-routeCarrito.post(
-  "/:id?/productos/:idProducto",
-  addProductoToCarritoController
+routeCarrito.delete(
+  "/:idCarrito?/productos/:idProducto",
+  deleteProductFromCarritoController
 );
+
+routeCarrito.get("/:idCarrito?/productos", getAllProductsFromCarritoController);
+
+routeCarrito.post("/:idCarrito?/productos/:idProducto?", addProductoToCarritoController);
 
 export default routeCarrito;
