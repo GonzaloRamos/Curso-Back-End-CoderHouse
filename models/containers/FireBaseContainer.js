@@ -1,4 +1,4 @@
-import configDataBase from "../../config/configDataBase";
+import configDataBase from "../../config/configDataBase.js";
 import admin from "firebase-admin";
 
 import {v4 as uuidv4} from "uuid";
@@ -13,54 +13,52 @@ class FireBaseContainter {
     this.collection = db.collection(collection);
   }
 
-  async getById(id) {
+  async getAllDataOrById(id) {
     try {
-      const doc = await this.collection.doc(id).get();
-      if (!doc.exists) {
-        throw new Error(`Error al listar por id: no se encontró`);
-      } else {
-        const data = doc.data();
-        return {...data, id};
+      if (id) {
+        const doc = await this.collection.doc(id).get();
+        if (!doc.exists) {
+          throw new Error(`Error al listar por id: no se encontró`);
+        } else {
+          const data = doc.data();
+          return {...data, id};
+        }
       }
-    } catch (error) {
-      throw new Error(`Error al listar por id: ${error}`);
-    }
-  }
-
-  async getAll() {
-    try {
       const result = [];
-      const allDocsReference = this.collection.get();
+      const allDocsReference = await this.collection.get();
+
       allDocsReference.forEach((doc) => {
+        console.log(doc.data());
         result.push({id: doc.id, ...doc.data()});
       });
+      return result;
     } catch (error) {
-      throw new Error(`Error al listar: ${error}`);
+      throw new Error(`Error al obtener todos los datos: ${error}`);
     }
   }
 
-  async save(id = uuidv4(), item) {
+  async createData(item) {
     try {
       const itemComplete = {
-        id,
+        timeStamp: Date.now(),
         ...item,
       };
       const success = await this.collection.add(itemComplete);
-      return {...itemComplete, idDoc: success.id};
+      return {...itemComplete, id: success.id};
     } catch (error) {
       throw new Error(`Error al guardar el item: ${error}`);
     }
   }
 
-  async update(id, item) {
+  async updateData(id, item) {
     try {
-      const writeTime = await this.collection.doc(id).set(item);
+      const writeTime = await this.collection.doc(id).update(item);
       return {...item, writeTime};
     } catch (error) {
       throw new Error(`Error al actualizar: ${error}`);
     }
   }
-  async delete(id) {
+  async deleteData(id) {
     try {
       const document = await this.collection.doc(id);
       const timeDeleted = await document.delete();

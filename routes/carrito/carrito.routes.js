@@ -8,18 +8,15 @@ import {
 } from "../../controllers/carrito/carrito.controllers.js";
 
 const routeCarrito = Router();
+routeCarrito.get("/:idCarrito?/productos", getAllProductsFromCarritoController);
 
 routeCarrito.post("/", createCarritoController);
+routeCarrito.post("/:idCarrito?/productos/:idProducto?", addProductoToCarritoController);
 
 routeCarrito.delete("/:idCarrito?", deleteCarritoController);
-
 routeCarrito.delete(
   "/:idCarrito?/productos/:idProducto",
   deleteProductFromCarritoController
 );
-
-routeCarrito.get("/:idCarrito?/productos", getAllProductsFromCarritoController);
-
-routeCarrito.post("/:idCarrito?/productos/:idProducto?", addProductoToCarritoController);
 
 export default routeCarrito;

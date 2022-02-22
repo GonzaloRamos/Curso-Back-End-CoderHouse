@@ -11,9 +11,11 @@ switch (process.env.DATABASE_TO_USE) {
     carritoDao = new CarritoDaoMongoDB();
     break;
   case "fireBase":
-    const {default: ProductosDaoFireBase} = await import("");
+    const {default: ProductosDaoFireBase} = await import(
+      "./productos/ProductosDaoFireBase.js"
+    );
     const {default: CarritoDaoFireBase} = await import("./carrito/CarritoDaoFireBase.js");
-    productosDao = ProductosDaoFireBase;
+    productosDao = new ProductosDaoFireBase();
     carritoDao = new CarritoDaoFireBase();
     break;
   default:
