@@ -1,5 +1,13 @@
 const {ProductosApi} = require("../models/index");
 const apiProducto = new ProductosApi("productos");
+const mockApi = require("../models/API/ProductosMock");
+const mockProductoApi = new mockApi("producto");
+
+const mockProductController = (req, res, next) => {
+  const mockedProducts = mockProductoApi.populate(5);
+  next();
+  return res.status(200).json(mockedProducts);
+};
 
 const getAllController = async (req, res) => {
   const productos = await apiProducto.getAll();
@@ -58,6 +66,7 @@ const deleteController = async (req, res) => {
 };
 
 module.exports = {
+  mockProductController,
   getAllController,
   getByIdController,
   saveController,

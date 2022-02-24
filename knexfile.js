@@ -1,11 +1,4 @@
 // Update with your config settings.
-const dotenv = require("dotenv");
-
-const path = require("path");
-
-dotenv.config({
-  path: path.resolve("./", `${process.env.NODE_ENV}.env`),
-});
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }

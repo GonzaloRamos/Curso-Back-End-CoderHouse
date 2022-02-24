@@ -1,48 +1,46 @@
 const express = require("express");
-const rutasApi = require("./router/app.routers");
-const path = require("path");
-const { engine } = require("express-handlebars");
+const http = require("http");
 const app = express();
-const PORT = process.env.PORT || 8080;
-const listaProductos = require("./data/productos");
+const server = http.createServer(app);
+const io = require("socket.io")(server);
+const path = require("path");
+const rutasApi = require("./router/app.routes");
+const utils = require("util");
 
-//Middlewares
-// app.use(express.static(path.resolve(__dirname, "./public")));
+const chatDao = require("./models/dao/index");
+const getNormalizedData = require("./utils/getNormalizedData");
 
-//Views engine
+const emitMensaje = async () => {
+  const mensaje = await chatDao.getAllDataOrById();
+  const normalizedData = getNormalizedData(mensaje);
 
-app.engine(
-  "handlebars",
-  engine({
-    extname: "hbs",
-    defaultLayout: "main.hbs",
-    layoutsDir: path.resolve(__dirname, "./views/handlebars/layouts"),
-    partialsDir: path.resolve(__dirname, "./views/handlebars/partials"),
-  })
-);
-app.set("view engine", "handlebars");
-app.set("views", path.resolve(__dirname, "./views/handlebars"));
+  io.sockets.emit("chat", normalizedData);
+};
+
+app.use(express.static(__dirname + "/public"));
 
 //Rutas
 app.use("/api", rutasApi);
 
 app.get("/", (req, res) => {
-  res.render("index", {
-    mostrarProductos: false,
-    productos: listaProductos,
+  res.sendFile(path.resolve(__dirname, "index.html"));
+});
+
+app.get("/productos-test", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "./public/productos-test.html"));
+});
+
+io.on("connection", async (socket) => {
+  emitMensaje();
+  socket.on("incomingMessage", async (message) => {
+    if (message) {
+      const msj = await chatDao.createData(message);
+
+      emitMensaje();
+    }
   });
 });
 
-app.get("/productos", (req, res) => {
-  res.render("index", {
-    mostrarProductos: true,
-    productos: listaProductos,
-  });
+server.listen(3000, () => {
+  console.log("escuchando en el puerto 3000");
 });
-
-//Server listening
-const connectedServer = app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
-});
-
-connectedServer.on("error", (e) => console.log(e));
