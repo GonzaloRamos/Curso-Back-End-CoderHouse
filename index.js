@@ -13,7 +13,8 @@ const getNormalizedData = require("./utils/getNormalizedData");
 const emitMensaje = async () => {
   const mensaje = await chatDao.getAllDataOrById();
   const normalizedData = getNormalizedData(mensaje);
-
+  // console.log(mensaje);
+  // console.log(utils.inspect(normalizedData, false, 10, true));
   io.sockets.emit("chat", normalizedData);
 };
 

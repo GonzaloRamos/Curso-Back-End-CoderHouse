@@ -1,28 +1,28 @@
 const {normalize, schema} = require("normalizr");
 
 const getNormalizedData = (data) => {
-  // Define a schema
   const dataJson = JSON.stringify(data);
   const dataParsed = JSON.parse(dataJson);
+  console.log(dataParsed);
 
-  const schemaAll = {
-    id: 1,
-    mensajes: dataParsed,
-  };
+  const schemaAuthor = new schema.Entity("author", {}, {idAttribute: "id"});
 
-  const authorSchema = new schema.Entity("author", undefined, {idAttribute: "email"});
-  const mensajeSchema = new schema.Entity(
-    "post",
-    {author: authorSchema},
-    {idAttribute: "_id"}
+  const schemaMensaje = new schema.Entity("post", {author: schemaAuthor});
+
+  const schemaMensajes = new schema.Entity(
+    "posts",
+    {mensajes: [schemaMensaje]},
+    {idAttribute: "mensajes"}
   );
-  const mensajesSchema = new schema.Entity("posts", {messages: [mensajeSchema]});
 
-  const normalizePost = normalize(schemaAll, mensajesSchema);
+  const normalizarMensajes = normalize(
+    {id: "mensajes", mensajes: dataParsed},
+    schemaMensajes
+  );
 
   //
 
-  return normalizePost;
+  return normalizarMensajes;
 };
 
 module.exports = getNormalizedData;

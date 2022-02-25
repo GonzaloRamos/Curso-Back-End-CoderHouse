@@ -32,6 +32,7 @@ class MongoDBContainer {
         }
         return result;
       }
+
       return await this.model.find({}, {_id: 0, __v: 0});
     } catch (error) {
       throw new Error(`Error al obtener todos los datos: ${error}`);

@@ -4,33 +4,34 @@ const $ = (selector) => document.querySelector(selector);
 
 const button = $("#buttonSend");
 
-console.log(normalizr.schema.Entity);
-
 const deNormalizeData = (data) => {
-  const authorSchema = new normalizr.schema.Entity("author", undefined, {
-    idAttribute: "email",
-  });
-  const mensajeSchema = new normalizr.schema.Entity(
+  const schemaAuthor = new normalizr.schema.Entity("author", {}, {idAttribute: "id"});
+
+  const schemaMensaje = new normalizr.schema.Entity(
     "post",
-    {author: authorSchema},
+    {author: schemaAuthor},
     {idAttribute: "_id"}
   );
-  const mensajesSchema = new normalizr.Schema.Entity("posts", {
-    messages: [mensajeSchema],
-  });
+
+  const schemaMensajes = new normalizr.schema.Entity(
+    "posts",
+    {mensajes: [schemaMensaje]},
+    {idAttribute: "id"}
+  );
 
   const denormalizePost = normalizr.denormalize(
     data.result,
-    mensajesSchema,
+    schemaMensajes,
     data.entities
   );
+
   return denormalizePost;
 };
 
 const getCompresion = (item, item2) => {
   const length1 = JSON.stringify(item).length;
   const length2 = JSON.stringify(item2).length;
-  const compresion = `${Math.round((length1 / length2) * 100).toFixed(2)}`;
+  const compresion = parseInt((length1 * 100) / length2);
 
   return compresion;
 };
@@ -57,7 +58,7 @@ const sendMesaage = (e, formInputs) => {
     inputEmail,
   } = formInputs;
 
-  const message = {
+  const mensaje = {
     author: {
       id: inputEmail.value,
       nombre: inputNombre.value,
@@ -70,9 +71,7 @@ const sendMesaage = (e, formInputs) => {
     texto: inputMsj.value,
   };
 
-  console.log(message);
-
-  socket.emit("incomingMessage", message);
+  socket.emit("incomingMessage", mensaje);
   inputMsj.value = "";
   inputMsj.focus();
 };
@@ -81,24 +80,41 @@ button.addEventListener("click", (event) => {
   sendMesaage(event, messageForm);
 });
 
+const separateObject = (obj) => {
+  const res = [];
+  const keys = Object.keys(obj);
+
+  keys.forEach((key) => {
+    res.push({
+      [key]: obj[key],
+    });
+  });
+  return res;
+};
+
 socket.on("chat", (messages) => {
   const result = deNormalizeData(messages);
   const compresion = getCompresion(messages, result);
-
-  const texto = result
-    .map(({texto, author}) => {
-      return `<li class="list-group-item mt-3"> <span>${
-        author.nombre + author.apellido
-      }</span> <span class="text-primary fw-bold">${
-        author.id
-      }</span> <span class="text-success"> [${author.alias} ]</span> <img src="${
-        author.avatar
-      }" class"img-fluid img-thumbnail" alt="user avatar" />: ${texto}</li>`;
+  const arrayMensajes = separateObject(result);
+  const texto = arrayMensajes
+    .map((mensaje, index) => {
+      return `<li class="list-group-item mt-3"> <span>${mensaje[index].author.nombre} ${
+        mensaje[index].author.apellido
+      }</span> <span class="text-primary fw-bold">
+      ${mensaje[
+        index
+      ].timeStamp.toLocaleString()}}</span> <span class="text-success"> [Alias: ${
+        mensaje[index].author.alias
+      } ]</span> <img src="${
+        mensaje[index].author.avatar
+      }" class"img-fluid img-thumbnail" alt="user avatar" />: ${
+        mensaje[index].texto
+      }</li>`;
     })
     .join("");
 
   $("#messages").innerHTML = texto;
-  $("#compresion").innerHTML = compresion;
+  $("#compresion").innerText = `Porcentaje de compresion: %${compresion}`;
 });
 
 (async () => {
