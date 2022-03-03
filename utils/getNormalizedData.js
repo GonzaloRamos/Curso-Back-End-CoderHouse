@@ -3,7 +3,6 @@ const {normalize, schema} = require("normalizr");
 const getNormalizedData = (data) => {
   const dataJson = JSON.stringify(data);
   const dataParsed = JSON.parse(dataJson);
-  console.log(dataParsed);
 
   const schemaAuthor = new schema.Entity("author", {}, {idAttribute: "id"});
 

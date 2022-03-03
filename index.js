@@ -3,39 +3,59 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
-const path = require("path");
-const rutasApi = require("./router/app.routes");
-const utils = require("util");
 
+// import rutas
+const rutasApi = require("./router/api/app.routes");
+const rutasWeb = require("./router/web/home.routes");
+const rutasAuth = require("./router/web/auth.routes");
+
+//import sessions
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
+//import dao chats
+const configDB = require("./config/configDataBase");
 const chatDao = require("./models/dao/index");
 const getNormalizedData = require("./utils/getNormalizedData");
+
+//Config server
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.static("public"));
+
+app.use(
+  session({
+    store: MongoStore.create({mongoUrl: configDB.mongoDB.uri}),
+    secret: "login",
+    saveUninitialized: false,
+    resave: false,
+    rolling: true,
+    cookie: {
+      maxAge: 60000,
+    },
+  })
+);
+
+app.set("view engine", "ejs");
 
 const emitMensaje = async () => {
   const mensaje = await chatDao.getAllDataOrById();
   const normalizedData = getNormalizedData(mensaje);
-  // console.log(mensaje);
-  // console.log(utils.inspect(normalizedData, false, 10, true));
+
   io.sockets.emit("chat", normalizedData);
 };
 
-app.use(express.static(__dirname + "/public"));
-
 //Rutas
 app.use("/api", rutasApi);
-
-app.get("/", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "index.html"));
-});
-
-app.get("/productos-test", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "./public/productos-test.html"));
-});
+app.use(rutasAuth);
+app.use(rutasWeb);
 
 io.on("connection", async (socket) => {
   emitMensaje();
   socket.on("incomingMessage", async (message) => {
     if (message) {
-      const msj = await chatDao.createData(message);
+      await chatDao.createData(message);
 
       emitMensaje();
     }

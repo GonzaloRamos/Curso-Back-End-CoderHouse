@@ -7,7 +7,7 @@ const {
   saveController,
   updateController,
   deleteController,
-} = require("../../controllers/productos.controllers");
+} = require("../../../controllers/productos.controllers");
 
 router.get("/", getAllController);
 

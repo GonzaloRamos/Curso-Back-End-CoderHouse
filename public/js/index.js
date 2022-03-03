@@ -3,7 +3,8 @@ const socket = io();
 const $ = (selector) => document.querySelector(selector);
 
 const button = $("#buttonSend");
-
+const btnLogOut = $("#btn-logout");
+console.log(btnLogOut);
 const deNormalizeData = (data) => {
   const schemaAuthor = new normalizr.schema.Entity("author", {}, {idAttribute: "id"});
 
@@ -78,6 +79,10 @@ const sendMesaage = (e, formInputs) => {
 
 button.addEventListener("click", (event) => {
   sendMesaage(event, messageForm);
+});
+
+btnLogOut.addEventListener("click", () => {
+  window.location.href = "/logout";
 });
 
 const separateObject = (obj) => {
