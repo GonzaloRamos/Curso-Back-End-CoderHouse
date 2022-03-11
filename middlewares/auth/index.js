@@ -1,5 +1,5 @@
 function webAuth(req, res, next) {
-  if (req.session?.nombre) {
+  if (req.isAuthenticated()) {
     next();
   } else {
     res.redirect("/login");
@@ -7,7 +7,7 @@ function webAuth(req, res, next) {
 }
 
 function apiAuth(req, res, next) {
-  if (req.session?.nombre) {
+  if (req.isAuthenticated()) {
     next();
   } else {
     res.status(401).json({error: "no autorizado!"});

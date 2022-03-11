@@ -4,8 +4,8 @@ const path = require("path");
 const {webAuth} = require("../../middlewares/auth/index");
 
 homeRoute.get("/home", webAuth, (req, res) => {
-  res.render(path.join(process.cwd(), "/public/pages/index.ejs"), {
-    nombre: req.session.nombre,
+  res.render("index.ejs", {
+    nombre: req.user.email,
   });
 });
 

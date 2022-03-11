@@ -16,7 +16,7 @@ class MongoDBContainer {
       const dataComplete = {timeStamp: Date.now(), ...data};
       return await this.model.create(dataComplete);
     } catch (error) {
-      throw new Error(`No se pudo guardar: ${error}`);
+      throw new Error(JSON.stringify(error));
     }
   }
 
@@ -35,7 +35,7 @@ class MongoDBContainer {
 
       return await this.model.find({}, {_id: 0, __v: 0});
     } catch (error) {
-      throw new Error(`Error al obtener todos los datos: ${error}`);
+      throw new Error(JSON.stringify(error));
     }
   }
 
@@ -45,11 +45,11 @@ class MongoDBContainer {
         new: true,
       });
       if (!dataUpdate) {
-        throw new Error(`No se encontro información con id: ${id}`);
+        throw new Error(JSON.stringify(error));
       }
       return dataUpdate;
     } catch (error) {
-      throw new Error(`Error al actualizar: ${error}`);
+      throw new Error(JSON.stringify(error));
     }
   }
 
@@ -57,7 +57,7 @@ class MongoDBContainer {
     try {
       await this.model.findByIdAndDelete(id);
     } catch (error) {
-      throw new Error(`No se pudo eliminar: ${error}`);
+      throw new Error(JSON.stringify(error));
     }
   }
 }

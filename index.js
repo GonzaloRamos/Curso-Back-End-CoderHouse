@@ -15,15 +15,16 @@ const MongoStore = require("connect-mongo");
 
 //import dao chats
 const configDB = require("./config/configDataBase");
-const chatDao = require("./models/dao/index");
+const {chatDao} = require("./models/dao/index");
 const getNormalizedData = require("./utils/getNormalizedData");
 
-//Config server
+//import passport
+const passport = require("./middlewares/auth/passport");
 
+//Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static("public"));
-
+app.use(express.static("./public"));
 app.use(
   session({
     store: MongoStore.create({mongoUrl: configDB.mongoDB.uri}),
@@ -37,6 +38,11 @@ app.use(
   })
 );
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Config server
+app.set("views", "./views");
 app.set("view engine", "ejs");
 
 const emitMensaje = async () => {

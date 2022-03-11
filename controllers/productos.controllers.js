@@ -1,5 +1,4 @@
-const {ProductosApi} = require("../models/index");
-const apiProducto = new ProductosApi("productos");
+const {productoDao: apiProducto} = require("../models/dao/index");
 const mockApi = require("../models/API/ProductosMock");
 const mockProductoApi = new mockApi("producto");
 
@@ -10,13 +9,13 @@ const mockProductController = (req, res, next) => {
 };
 
 const getAllController = async (req, res) => {
-  const productos = await apiProducto.getAll();
+  const productos = await apiProducto.getAllDataOrById();
   return res.status(200).json(productos);
 };
 
 const getByIdController = async (req, res) => {
   const {id} = req.params;
-  const producto = await apiProducto.getById(id);
+  const producto = await apiProducto.getAllDataOrById(id);
   if (producto) {
     return res.status(200).json(producto);
   }
@@ -25,9 +24,9 @@ const getByIdController = async (req, res) => {
 };
 
 const saveController = async (req, res) => {
-  const {title, price, thumbnail} = req.body;
-  if (title && price && thumbnail) {
-    await apiProducto.save({title, price, imageURL: thumbnail});
+  const {title, price, image} = req.body;
+  if (title && price && image) {
+    await apiProducto.createData({title, price, image});
 
     return res.status(200).redirect("/");
   }
@@ -40,7 +39,7 @@ const updateController = async (req, res) => {
   const {title, price, thumbnail} = req.body;
 
   if (title && price && thumbnail) {
-    const result = apiProducto.updateProducto(id, {title, price, thumbnail});
+    const result = apiProducto.updateData(id, {title, price, image});
     if (result) {
       return res.status(200).send("Producto actualizado");
     }
@@ -54,7 +53,7 @@ const deleteController = async (req, res) => {
   const {id} = req.params;
 
   if (id) {
-    const result = await apiProducto.deleteProducto(id);
+    const result = await apiProducto.deleteData(id);
 
     if (result) {
       return res.status(200).json({mensaje: "Producto eliminado"});

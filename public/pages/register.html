@@ -16,9 +16,9 @@
   <body>
     <div class="container mt-3">
       <div class="jumbotron">
-        <h1>Login de Usuario</h1>
+        <h1>Registro de Usuario</h1>
         <br />
-        <form action="/login" method="post" autocomplete="off">
+        <form action="/register" method="post" autocomplete="off">
           <div class="form-group">
             <label for="nombre">Ingrese su email</label>
             <input
@@ -38,12 +38,10 @@
             />
           </div>
           <button class="btn btn-success mt-3">Enviar</button>
-          
         </form>
-        <button class="btn btn-success mt-3" onclick="window.location.href='/register'">Register</button>
-      </div>
-
-        </form>
+        <button class="btn btn-success mt-3" onclick="window.location.href='/login'">
+          Login
+        </button>
       </div>
     </div>
   </body>

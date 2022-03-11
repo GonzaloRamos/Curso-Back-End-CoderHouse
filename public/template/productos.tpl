@@ -19,7 +19,7 @@
 
             <img
               style="width: 10rem"
-              src="{{this.imageURL}}"
+              src="{{this.image}}"
               alt="{{this.title}}"
             />
           </td>

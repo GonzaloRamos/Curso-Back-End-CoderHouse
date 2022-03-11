@@ -1,11 +1,5 @@
 const MongoDBContainer = require("../containers/MongoDBContainer");
-const Mongoose = require("mongoose");
-
-const chatSchema = new Mongoose.Schema({
-  author: {type: Object, required: true},
-  texto: {type: String, required: true},
-  timeStamp: {type: Date, default: Date.now},
-});
+const {chatSchema} = require("../schemas/index");
 
 class ChatDaoMongoDB extends MongoDBContainer {
   constructor() {
