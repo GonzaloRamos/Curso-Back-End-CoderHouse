@@ -4,6 +4,8 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 
+//importo fork
+
 // import rutas
 const rutasApi = require("./router/api/app.routes");
 const rutasWeb = require("./router/web/home.routes");
@@ -17,6 +19,9 @@ const MongoStore = require("connect-mongo");
 const configDB = require("./config/configDataBase");
 const {chatDao} = require("./models/dao/index");
 const getNormalizedData = require("./utils/getNormalizedData");
+
+//import PORT Config
+const PORT = require("./config/configPort");
 
 //import passport
 const passport = require("./middlewares/auth/passport");
@@ -33,7 +38,7 @@ app.use(
     resave: false,
     rolling: true,
     cookie: {
-      maxAge: 60000,
+      maxAge: 100000,
     },
   })
 );
@@ -68,6 +73,6 @@ io.on("connection", async (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.log("escuchando en el puerto 3000");
+server.listen(PORT, () => {
+  console.log(`escuchando en el puerto ${PORT}`);
 });

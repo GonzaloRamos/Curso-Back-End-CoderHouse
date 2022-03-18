@@ -13,4 +13,18 @@ homeRoute.get("/home/productos-test", webAuth, (req, res) => {
   res.sendFile(path.join(process.cwd(), "/public/productos-test.html"));
 });
 
+homeRoute.get("/home/info", webAuth, (req, res) => {
+  const info = {
+    directorio: process.cwd(),
+    memory: process.memoryUsage(),
+    processId: process.pid,
+    node: process.version,
+    os: process.platform,
+    inputArgs: process.argv,
+    path: process.execPath,
+  };
+  console.log(info.memory);
+  res.render("info.ejs", {info});
+});
+
 module.exports = homeRoute;
