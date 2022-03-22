@@ -10,6 +10,7 @@ const io = require("socket.io")(server);
 const rutasApi = require("./router/api/app.routes");
 const rutasWeb = require("./router/web/home.routes");
 const rutasAuth = require("./router/web/auth.routes");
+const infoRoute = require("./router/web/info.routes");
 
 //import sessions
 const session = require("express-session");
@@ -61,6 +62,7 @@ const emitMensaje = async () => {
 app.use("/api", rutasApi);
 app.use(rutasAuth);
 app.use(rutasWeb);
+app.use(infoRoute);
 
 io.on("connection", async (socket) => {
   emitMensaje();

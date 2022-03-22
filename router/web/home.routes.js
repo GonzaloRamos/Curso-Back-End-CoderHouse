@@ -13,7 +13,7 @@ homeRoute.get("/home/productos-test", webAuth, (req, res) => {
   res.sendFile(path.join(process.cwd(), "/public/productos-test.html"));
 });
 
-homeRoute.get("/home/info", webAuth, (req, res) => {
+homeRoute.get("/info", (req, res) => {
   const info = {
     directorio: process.cwd(),
     memory: process.memoryUsage(),
@@ -23,7 +23,6 @@ homeRoute.get("/home/info", webAuth, (req, res) => {
     inputArgs: process.argv,
     path: process.execPath,
   };
-  console.log(info.memory);
   res.render("info.ejs", {info});
 });
 

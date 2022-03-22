@@ -1,20 +1,20 @@
-const generateRandomNumbers = (quantity) => {
-  const resp = {};
-  for (let index = 0; index <= quantity; index++) {
-    let key = Math.floor(Math.random() * quantity) + 1;
-    const initialCount = 0;
-    if (Object.hasOwnProperty.call(resp, key)) {
-      resp[key] += 1;
-    } else {
-      resp[key] = initialCount;
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+process.on("message", (cant) => {
+  let collection = {};
+  if (Number(cant) > 0) {
+    for (let i = 0; i < cant; i++) {
+      let random = Math.round(getRandomArbitrary(0, 10000));
+
+      if (collection.hasOwnProperty(random)) {
+        collection[random] = collection[random] + 1;
+      } else {
+        collection[random] = 0;
+      }
     }
   }
-  return resp;
-};
 
-process.on("message", (data) => {
-  const calculo = generateRandomNumbers(data);
-  process.send(calculo);
+  process.send(collection);
 });
-
-module.exports = generateRandomNumbers;
