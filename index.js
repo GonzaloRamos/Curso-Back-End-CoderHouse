@@ -4,7 +4,9 @@ const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 
-//importo fork
+//importo clusters
+const cluster = require("cluster");
+const numCPUs = require("os").cpus().length;
 
 // import rutas
 const rutasApi = require("./router/api/app.routes");
@@ -22,7 +24,7 @@ const {chatDao} = require("./models/dao/index");
 const getNormalizedData = require("./utils/getNormalizedData");
 
 //import PORT Config
-const PORT = require("./config/configPort");
+const {PORT, MODE} = require("./config/configServer");
 
 //import passport
 const passport = require("./middlewares/auth/passport");
@@ -75,6 +77,25 @@ io.on("connection", async (socket) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`escuchando en el puerto ${PORT}`);
-});
+if (MODE === "cluster") {
+  if (cluster.isPrimary) {
+    console.log(`Primary ${process.pid} is running`);
+
+    // Fork workers.
+    for (let i = 0; i < numCPUs; i++) {
+      cluster.fork();
+    }
+
+    cluster.on("exit", (worker, code, signal) => {
+      console.log(`worker ${worker.process.pid} died`);
+    });
+  } else {
+    server.listen(PORT, () => {
+      console.log(`Escuchando en el puerto ${PORT}`, `Worker ${process.pid} started`);
+    });
+  }
+} else {
+  server.listen(PORT, () => {
+    console.log(`Escuchando en el puerto ${PORT}`, `Worker ${process.pid} Fork`);
+  });
+}

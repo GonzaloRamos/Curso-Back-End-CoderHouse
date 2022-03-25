@@ -123,14 +123,14 @@ socket.on("chat", (messages) => {
 });
 
 (async () => {
-  const productos = await fetch("http://localhost:3000/api/productos", {
+  const productos = await fetch("http://localhost:8082/api/productos", {
     headers: {"Content-Type": "application/json"},
   });
 
   if (productos.status === 200) {
     const productosJson = await productos.json();
 
-    fetch("http://localhost:3000/template/productos.tpl")
+    fetch("http://localhost:8082/public/template/productos.tpl")
       .then((res) => res.text())
       .then((data) => {
         const template = Handlebars.compile(data);
@@ -139,3 +139,5 @@ socket.on("chat", (messages) => {
       });
   }
 })();
+
+console.log("Hola desde index.js public");
