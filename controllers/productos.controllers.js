@@ -1,6 +1,7 @@
 const {productoDao: apiProducto} = require("../models/dao/index");
 const mockApi = require("../models/API/ProductosMock");
 const mockProductoApi = new mockApi("producto");
+const {errorLogger} = require(process.cwd() + "/log/logger/index.js");
 
 const mockProductController = (req, res, next) => {
   const mockedProducts = mockProductoApi.populate(5);
@@ -31,7 +32,7 @@ const saveController = async (req, res) => {
     return res.status(200).redirect("/");
   }
 
-  return res.status(400).send("Faltan datos");
+  return res.status(400).json({error: "Faltan datos"});
 };
 
 const updateController = async (req, res) => {
@@ -41,12 +42,12 @@ const updateController = async (req, res) => {
   if (title && price && thumbnail) {
     const result = apiProducto.updateData(id, {title, price, image});
     if (result) {
-      return res.status(200).send("Producto actualizado");
+      return res.status(200).json({mensaje: "Producto actualizado"});
     }
-    return res.status(404).send("Producto no encontrado");
+    return res.status(404).json({error: "Producto no encontrado"});
   }
 
-  return res.status(400).send("Faltan datos");
+  return res.status(400).json({error: "Faltan datos"});
 };
 
 const deleteController = async (req, res) => {

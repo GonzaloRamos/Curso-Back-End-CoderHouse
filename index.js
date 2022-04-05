@@ -1,3 +1,4 @@
+// Init imports
 const express = require("express");
 const http = require("http");
 const app = express();
@@ -7,6 +8,10 @@ const io = require("socket.io")(server);
 //importo clusters
 const cluster = require("cluster");
 const numCPUs = require("os").cpus().length;
+
+//Importo log4js y loggers
+const log4js = require("log4js");
+const {warnLogger, errorLogger, infoLogger} = require("./log/logger/index");
 
 // import rutas
 const rutasApi = require("./router/api/app.routes");
@@ -48,6 +53,36 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+// app.use(
+//   log4js.connectLogger(logger, {
+//     level: "auto",
+//     statusRules: [
+//       {from: 200, to: 299, level: "debug"},
+//       {codes: [303, 304], level: "info"},
+//       {codes: [404], level: "warn"},
+//       {from: 500, to: 599, level: "error"},
+//     ],
+//   })
+// );
+
+app.use(
+  log4js.connectLogger(infoLogger, {
+    level: "info",
+    statusRules: [{from: 200, to: 299, level: "info"}],
+  })
+);
+app.use(
+  log4js.connectLogger(warnLogger, {
+    level: "warn",
+    statusRules: [{codes: [404], level: "warn"}],
+  })
+);
+app.use(
+  log4js.connectLogger(errorLogger, {
+    level: "error",
+    statusRules: [{codes: [400], level: "error"}],
+  })
+);
 
 //Config server
 app.set("views", "./views");
