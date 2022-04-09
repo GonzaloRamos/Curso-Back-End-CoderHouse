@@ -47,7 +47,7 @@ Para analizar el archivo creado por NODE en el modo profile, ejecutar el comando
 
 ### Test con autocanon y 0x
 
-1. prende el servidor con 0x ejecutando: `npm run start0x`.
+1. Se inicia el servidor con 0x ejecutando: `npm run start0x`.
 2. En el archivo benchmark.js tenemos una función desde podemos aplicar a la URL en el que hacer las pruebas:`run(<URL>)`. Para configurar los parámetros del test modificar:` const inst = autocannon({ url, connections: 100, duration: 20 })`
 3. Ejecutar el comando `npm run test`. Que va a ejecutar el archivo benchmark.js
 4. Apagar el servidor y ejecutar el archivo HTML de la carpeta creada que contiene el benchmark realizado con autocannon

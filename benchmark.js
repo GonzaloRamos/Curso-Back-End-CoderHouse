@@ -25,4 +25,5 @@ console.log("Running all benchmarks in parallel ...");
  * URL donde ejecutar los test
  */
 
-run("http://localhost:8080/api/random/");
+run("http://localhost:8080/infoLog/?compress=true");
+run("http://localhost:8080/infoLog/");
