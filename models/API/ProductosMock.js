@@ -1,4 +1,4 @@
-const {createProductItem} = require("../../utils/dataFaker");
+const Utils = require("../../utils/Utils");
 
 class MockApi {
   constructor(resource) {
@@ -17,7 +17,7 @@ class MockApi {
 
   createItem(resource) {
     const newItems = {
-      producto: createProductItem(),
+      producto: Utils.createProductItem(),
     };
     return newItems[resource];
   }

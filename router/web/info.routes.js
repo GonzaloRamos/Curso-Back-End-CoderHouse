@@ -1,9 +1,9 @@
 const express = require("express");
 const infoRoute = express.Router();
 const CPUs = require("os").cpus().length;
-const doCompression = require("../../utils/doCompression");
+const Utils = require("../../utils/Utils");
 
-infoRoute.get("/infoLog/:compress?", doCompression, (req, res) => {
+infoRoute.get("/infoLog/:compress?", Utils.doCompression, (req, res) => {
   const info = {
     directorio: process.cwd(),
     memory: process.memoryUsage(),
@@ -18,7 +18,7 @@ infoRoute.get("/infoLog/:compress?", doCompression, (req, res) => {
   res.status(200).render("info.ejs", {info});
 });
 
-infoRoute.get("/infoNoLog/:compress?", doCompression, (req, res) => {
+infoRoute.get("/infoNoLog/:compress?", Utils.doCompression, (req, res) => {
   const info = {
     directorio: process.cwd(),
     memory: process.memoryUsage(),

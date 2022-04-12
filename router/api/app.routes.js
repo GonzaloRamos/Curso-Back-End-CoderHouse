@@ -12,6 +12,10 @@ router.use(express.urlencoded({extended: true}));
 //Rutas
 router.use("/productos", rutaProductos);
 router.use("/random", randomApi);
+router.use((req, res, next) => {
+  console.log(res.statusCode);
+  next();
+});
 
 router.get("/productos-test", mockProductController);
 

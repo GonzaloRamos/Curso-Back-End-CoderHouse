@@ -1,7 +1,7 @@
 const {productoDao: apiProducto} = require("../models/dao/index");
 const mockApi = require("../models/API/ProductosMock");
 const mockProductoApi = new mockApi("producto");
-const {errorLogger} = require(process.cwd() + "/log/logger/index.js");
+const {errorLogger} = require("../log/logger/index");
 
 const mockProductController = (req, res, next) => {
   const mockedProducts = mockProductoApi.populate(5);
@@ -20,7 +20,7 @@ const getByIdController = async (req, res) => {
   if (producto) {
     return res.status(200).json(producto);
   }
-
+  errorLogger.error("Log de prueba");
   return res.status(404).json({error: "Producto no encontrado"});
 };
 
@@ -31,7 +31,7 @@ const saveController = async (req, res) => {
 
     return res.status(200).redirect("/");
   }
-
+  errorLogger.error("Log de prueba");
   return res.status(400).json({error: "Faltan datos"});
 };
 
@@ -46,7 +46,7 @@ const updateController = async (req, res) => {
     }
     return res.status(404).json({error: "Producto no encontrado"});
   }
-
+  errorLogger.error("Log de prueba");
   return res.status(400).json({error: "Faltan datos"});
 };
 
@@ -61,7 +61,7 @@ const deleteController = async (req, res) => {
     }
     return res.status(404).json({mensaje: "Producto no encontrado"});
   }
-
+  errorLogger.error("Log de prueba");
   return res.status(404).json({mensaje: "Se debe proporcionar un id"});
 };
 

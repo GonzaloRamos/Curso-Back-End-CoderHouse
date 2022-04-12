@@ -18,9 +18,10 @@ log4js.configure({
     infoFile: {
       type: "file",
       filename: path.join(cwd, "/log/info.log") /**nombre del archivo */,
+      maxLogSize: 10485760,
     },
     warningFiles: {type: "file", filename: path.join(cwd, "/log/warn.log")},
-    errorsFile: {type: "file", filename: path.join(cwd, "/log/error.log")},
+    errorsFiles: {type: "file", filename: path.join(cwd, "/log/error.log")},
   },
   categories: {
     /**cuando no se elija ninguna categoria en especial
@@ -34,15 +35,15 @@ log4js.configure({
       level: "debug",
     },
     infoFile: {
-      appenders: ["infoFile"],
+      appenders: ["infoFile", "console"],
       level: "info",
     },
     warningFiles: {
       appenders: ["warningFiles"],
       level: "warn",
     },
-    error: {
-      appenders: ["console", "errorsFile"],
+    errorsFiles: {
+      appenders: ["errorsFiles"],
       level: "error",
     },
   },

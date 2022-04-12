@@ -1,5 +1,6 @@
 const Mongoose = require("mongoose");
 const configDataBase = require("../../config/configDataBase.js");
+const {errorLogger} = require("../../log/logger/index.js");
 
 (async () => {
   await Mongoose.connect(configDataBase.mongoDB.uri);
@@ -16,6 +17,7 @@ class MongoDBContainer {
       const dataComplete = {timeStamp: Date.now(), ...data};
       return await this.model.create(dataComplete);
     } catch (error) {
+      errorLogger.error();
       throw new Error(JSON.stringify(error));
     }
   }
