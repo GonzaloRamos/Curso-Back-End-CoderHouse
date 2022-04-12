@@ -55,8 +55,8 @@ app.use(
   log4js.connectLogger(infoLogger, {
     level: "auto",
     statusRules: [
-      {from: 200, to: 299, level: "info"},
-      {codes: [303, 304], level: "info"},
+      {from: 200, to: 304, level: "info"},
+      // {codes: [303, 304], level: "info"},
       {codes: [404], level: "warn"},
       {from: 500, to: 599, level: "error"},
     ],
