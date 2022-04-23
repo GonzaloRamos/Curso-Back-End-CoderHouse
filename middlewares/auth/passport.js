@@ -3,7 +3,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const bCrypt = require("bcrypt");
 
 const UsersDao = require("../../models/dao/UseDaoMongoDB");
-const Utils = require("../../utils/Utils");
+const UtilsUser = require("../../utils/User.utils");
 
 const User = new UsersDao();
 
@@ -19,7 +19,7 @@ passport.use(
       email: username,
       password: encrypt(password),
     };
-    const newUser = Utils.formatUserForDB(userObject);
+    const newUser = UtilsUser.formatUserForDB(userObject);
     User.createData(newUser)
       .then((user) => {
         console.log("¡Usuario registrado!");

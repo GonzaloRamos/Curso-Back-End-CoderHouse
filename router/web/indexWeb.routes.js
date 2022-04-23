@@ -9,8 +9,9 @@ router.use(homeRoutes);
 router.use(infoRoutes);
 router.use(authRoutes);
 router.get("*", (req, res) => {
+  const {url} = req;
   warnLogger.warn(`Error al encontrar la página ${req.url} con método ${req.method}`);
-  res.status(404).send("Pagina 404 en construccion =)!");
+  res.status(404).render("error404.ejs", {url});
 });
 
 module.exports = router;

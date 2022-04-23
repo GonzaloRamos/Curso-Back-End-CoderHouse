@@ -12,7 +12,7 @@ authWebRouter.get("/login", (req, res) => {
   if (nombre) {
     res.redirect("/");
   } else {
-    res.sendFile(path.join(process.cwd(), "/public/pages/login.html"));
+    res.render("./pages/auth/login.ejs");
   }
 });
 authWebRouter.get("/register", (req, res) => {
@@ -20,7 +20,7 @@ authWebRouter.get("/register", (req, res) => {
   if (nombre) {
     res.redirect("/");
   } else {
-    res.sendFile(path.join(process.cwd(), "/public/pages/register.html"));
+    res.render("./pages/auth/register.ejs");
   }
 });
 
@@ -33,12 +33,12 @@ authWebRouter.get("/logout", (req, res) => {
 
 authWebRouter.get("/login-error", (req, res) => {
   const error = "Credenciales no validas";
-  res.render("error.ejs", {error});
+  res.render("./pages/errors/error.ejs", {error});
 });
 
 authWebRouter.get("/register-error", (req, res) => {
   const error = "Usuario ya registrado";
-  req.render("error.ejs", {error});
+  req.render("./pages/errors/error.ejs", {error});
 });
 
 authWebRouter.post(

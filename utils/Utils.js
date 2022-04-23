@@ -99,15 +99,14 @@ class Utils {
     return collection;
   }
 
-  static formatUserForDB = (userObj) => {
-    const newUser = {
-      email: userObj.email,
-      password: userObj.password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    return newUser;
-  };
+  /**
+   * Mira las keys de un objeto. Si no tiene devuelve true.
+   * @param {Object} obj
+   * @returns Boolean
+   */
+  static isEmpty(obj) {
+    return Object.keys(obj).length === 0 || false;
+  }
 }
 
 module.exports = Utils;

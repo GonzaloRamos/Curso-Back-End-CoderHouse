@@ -12,7 +12,7 @@ const numCPUs = require("os").cpus().length;
 
 //Import log4js y loggers
 const log4js = require("log4js");
-const {infoLogger, logger} = require("./log/logger/index");
+const {infoLogger} = require("./log/logger/index");
 
 // import rutas
 const rutasApi = require("./router/api/app.routes");
@@ -23,14 +23,20 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
 //import dao chats
-const configDB = require("./config/configDataBase");
 const {chatDao} = require("./models/dao/index");
 
-//import PORT Config
-const {PORT, MODE} = require("./config/configServer");
+//import Config
+const {PORT, MODE, mongoDB} = require("./config/config");
 
 //import passport
 const passport = require("./middlewares/auth/passport");
+
+//import errorHandñer
+const errorHandler = require("./middlewares/errorHandlers/index");
+
+//Config server
+app.set("views", "./views");
+app.set("view engine", "ejs");
 
 //Middlewares
 app.use(express.json());
@@ -38,7 +44,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.static("./public"));
 app.use(
   session({
-    store: MongoStore.create({mongoUrl: configDB.mongoDB.uri}),
+    store: MongoStore.create({mongoUrl: mongoDB.uri}),
     secret: "login",
     saveUninitialized: false,
     resave: false,
@@ -56,35 +62,11 @@ app.use(
     level: "auto",
     statusRules: [
       {from: 200, to: 304, level: "info"},
-      // {codes: [303, 304], level: "info"},
       {codes: [404], level: "warn"},
       {from: 500, to: 599, level: "error"},
     ],
   })
 );
-
-// app.use(
-//   log4js.connectLogger(infoLogger, {
-//     level: "info",
-//     statusRules: [{from: 200, to: 299, level: "info"}],
-//   })
-// );
-// app.use(
-//   log4js.connectLogger(warnLogger, {
-//     level: "warn",
-//     statusRules: [{codes: [404], level: "warn"}],
-//   })
-// );
-// app.use(
-//   log4js.connectLogger(errorLogger, {
-//     level: "error",
-//     statusRules: [{codes: [400], level: "error"}],
-//   })
-// );
-
-//Config server
-app.set("views", "./views");
-app.set("view engine", "ejs");
 
 const emitMensaje = async () => {
   const mensaje = await chatDao.getAllDataOrById();
@@ -96,13 +78,6 @@ const emitMensaje = async () => {
 //Rutas
 app.use("/api", rutasApi);
 app.use(rutasWeb);
-// app.get("*", (req, res) => {
-//   console.log("funciona para 404");
-// });
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  next(err);
-});
 
 io.on("connection", async (socket) => {
   emitMensaje();

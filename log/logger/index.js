@@ -21,7 +21,7 @@ log4js.configure({
       maxLogSize: 10485760,
     },
     warningFiles: {type: "file", filename: path.join(cwd, "/log/warn.log")},
-    errorsFiles: {type: "file", filename: path.join(cwd, "/log/error.log")},
+    errorsFile: {type: "file", filename: path.join(cwd, "/log/error.log")},
   },
   categories: {
     /**cuando no se elija ninguna categoria en especial
@@ -42,8 +42,8 @@ log4js.configure({
       appenders: ["warningFiles"],
       level: "warn",
     },
-    errorsFiles: {
-      appenders: ["errorsFiles"],
+    errorsFile: {
+      appenders: ["errorsFile"],
       level: "error",
     },
   },

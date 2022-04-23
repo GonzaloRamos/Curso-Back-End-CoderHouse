@@ -1,9 +1,9 @@
 const Mongoose = require("mongoose");
-const configDataBase = require("../../config/configDataBase.js");
-const {errorLogger} = require("../../log/logger/index.js");
-
+const {mongoDB} = require("../../config/config");
+const STATUS = require("../../constants/api.constants.js");
+const ApiUtils = require("../../utils/Api.utils");
 (async () => {
-  await Mongoose.connect(configDataBase.mongoDB.uri);
+  await Mongoose.connect(mongoDB.uri);
   console.log("Conectado a MongoDB");
 })();
 
@@ -17,49 +17,69 @@ class MongoDBContainer {
       const dataComplete = {timeStamp: Date.now(), ...data};
       return await this.model.create(dataComplete);
     } catch (error) {
-      errorLogger.error();
-      throw new Error(JSON.stringify(error));
+      const newError = ApiUtils.formatErrorObject(STATUS.INTERNAL_ERROR, error.message);
+      throw new Error(JSON.stringify(newError));
     }
   }
 
-  async getAllDataOrById(id) {
+  async getAllDataOrById(ID) {
     try {
-      if (id) {
-        const result = await this.model.findById(id);
-
-        if (!result) {
-          throw new Error(
-            `No se encontro el documento con id: ${id}. En su lugar se obtuvo ${result}`
-          );
-        }
+      if (ID) {
+        const result = await this.model.findById(ID);
         return result;
       }
 
-      return await this.model.find({}, {_id: 0, __v: 0});
+      const result = await this.model.find({}, {_id: 1, __v: 0});
+      return result;
     } catch (error) {
-      throw new Error(JSON.stringify(error));
+      const newError = ApiUtils.formatErrorObject(
+        STATUS.NOT_FOUND,
+        `No se enontro un registro con ID: ${ID}`
+      );
+      throw new Error(JSON.stringify(newError));
     }
   }
 
-  async updateData(id, data) {
+  async updateData(ID, data) {
     try {
-      const dataUpdate = await this.model.findByIdAndUpdate(id, data, {
-        new: true,
-      });
-      if (!dataUpdate) {
-        throw new Error(JSON.stringify(error));
+      if (!ID || ApiUtils.isEmpty(data)) {
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
+          `Error en la petición. No se proporciono ningun ID o data.`
+        );
+        throw new Error(JSON.stringify(newError));
       }
-      return dataUpdate;
+      const document = await this.model.updateMany({_id: ID}, {new: true});
+
+      return document;
     } catch (error) {
-      throw new Error(JSON.stringify(error));
+      console.error(error.message);
+      const newError = ApiUtils.formatErrorObject(
+        STATUS.BAD_REQUEST,
+        `No se encontro un registro con ID ${ID}`
+      );
+      throw new Error(JSON.stringify(newError));
     }
   }
 
-  async deleteData(id) {
+  async deleteData(ID) {
     try {
-      await this.model.findByIdAndDelete(id);
+      if (!ID) {
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
+          `No se proporciono ningun ID`
+        );
+
+        throw new Error(JSON.stringify(newError));
+      }
+      return await this.model.findByIdAndDelete(ID);
     } catch (error) {
-      throw new Error(JSON.stringify(error));
+      const newError = ApiUtils.formatErrorObject(
+        STATUS.NOT_FOUND,
+        `No se encontro un registro para eliminar con ID ${ID}`
+      );
+      console.error(error.message);
+      throw new Error(JSON.stringify(newError));
     }
   }
 }
