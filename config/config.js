@@ -13,4 +13,5 @@ module.exports = {
   PORT,
   MODE,
   DATABASE_TO_USE: process.env.DATABASE_TO_USE,
+  factoryName: argv.factoryName,
 };

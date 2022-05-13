@@ -1,9 +1,15 @@
 const MongoDBContainer = require("../containers/MongoDBContainer");
 const {productoSchema} = require("../schemas/index");
 
+let instance = null;
 class ProductosDaoMongoDB extends MongoDBContainer {
   constructor() {
-    super("productos", productoSchema);
+    if (!instance) {
+      super("productos", productoSchema);
+      instance = this;
+    } else {
+      return instance;
+    }
   }
 }
 

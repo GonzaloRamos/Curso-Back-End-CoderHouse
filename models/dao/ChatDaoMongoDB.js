@@ -1,9 +1,15 @@
 const MongoDBContainer = require("../containers/MongoDBContainer");
 const {chatSchema} = require("../schemas/index");
 
+let instance = null;
 class ChatDaoMongoDB extends MongoDBContainer {
   constructor() {
-    super("chats", chatSchema);
+    if (!instance) {
+      super("chats", chatSchema);
+      instance = this;
+    } else {
+      return instance;
+    }
   }
 }
 
