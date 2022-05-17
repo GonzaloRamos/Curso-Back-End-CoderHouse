@@ -1,12 +1,12 @@
-const STATUS = require("../../constants/api.constants");
+const STATUS = require("../../config/constants/api.constants");
 const Utils = require("../../utils/Utils");
 
-class MockApi {
+class ProductosUtils extends Utils {
   constructor(resource) {
     this.resource = resource;
   }
 
-  populate(qty = 50) {
+  static populate(qty = 50) {
     try {
       const mockedItems = [];
       for (let i = 1; i <= qty; i++) {
@@ -23,7 +23,7 @@ class MockApi {
     }
   }
 
-  createItem(resource) {
+  static createItem(resource) {
     const newItems = {
       producto: Utils.createProductItem(),
     };
@@ -31,4 +31,4 @@ class MockApi {
   }
 }
 
-module.exports = MockApi;
+module.exports = ProductosUtils;

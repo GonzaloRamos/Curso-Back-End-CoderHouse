@@ -24,7 +24,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node  index.js --factoryName chat",
+    "start": "node  index.js --factoryNames chat productos",
     "start-dev": "nodemon  index.js  --port=3000 --mode='fork'",
     "fork": "pm2 start index.js --name='desafio-Nginx' --watch -- --port=8081",
     "cluster": "pm2 start index.js --name='desafio-nginx-Cluster' --watch -i max -- --port=8082",

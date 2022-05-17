@@ -1,14 +1,17 @@
-const MongoDBContainer = require("../containers/MongoDBContainer");
-const userSchema = require("../schemas/userSchema");
-let instance = null;
+const MongoDBContainer = require("../../containers/MongoDBContainer");
+const userSchema = require("../../schemas/userSchema");
+
 class UserDao extends MongoDBContainer {
+  static #instance = null;
   constructor() {
-    if (!instance) {
-      super("user", userSchema);
-      instance = this;
-    } else {
-      return instance;
+    super("user", userSchema);
+  }
+
+  static getInstance() {
+    if (!this.#instance) {
+      this.#instance = new UserDao();
     }
+    return this.#instance;
   }
 
   async getByEmail(email) {

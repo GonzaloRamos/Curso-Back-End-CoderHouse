@@ -11,7 +11,7 @@ router.use(authRoutes);
 router.get("*", (req, res) => {
   const {url} = req;
   warnLogger.warn(`Error al encontrar la página ${req.url} con método ${req.method}`);
-  res.status(404).render("error404.ejs", {url});
+  res.status(404).render("pages/errors/error404.ejs", {url});
 });
 
 module.exports = router;

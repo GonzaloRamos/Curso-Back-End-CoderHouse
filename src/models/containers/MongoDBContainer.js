@@ -1,6 +1,6 @@
 const Mongoose = require("mongoose");
 const {mongoDB} = require("../../config/config");
-const STATUS = require("../../constants/api.constants.js");
+const STATUS = require("../../config/constants/api.constants");
 const ApiUtils = require("../../utils/Api.utils");
 (async () => {
   await Mongoose.connect(mongoDB.uri);

@@ -2,7 +2,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const bCrypt = require("bcrypt");
 
-const UsersDao = require("../../models/dao/UseDaoMongoDB");
+const UsersDao = require("../../models/dao/mongo/UseDaoMongoDB");
 const UtilsUser = require("../../utils/User.utils");
 
 const User = new UsersDao();

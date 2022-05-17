@@ -1,4 +1,4 @@
-const {chatDao} = require("../models/dao/index");
+const {workingDao: chatDao} = require("../models/dao/index");
 
 const addMessageController = async (req, res, next) => {
   try {

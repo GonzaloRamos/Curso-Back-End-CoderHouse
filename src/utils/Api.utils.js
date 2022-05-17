@@ -1,5 +1,5 @@
 const Utils = require("./Utils");
-const {STATUS} = require("../constants/api.constants");
+const {STATUS} = require("../config/constants/api.constants");
 class ApiUtils extends Utils {
   /**
    * Formats the given error and messages into an object

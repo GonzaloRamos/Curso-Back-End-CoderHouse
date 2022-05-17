@@ -1,18 +1,4 @@
-const {productoDao: apiProducto} = require("../models/dao/index");
-const MockApi = require("../models/API/ProductosMock");
-const STATUS = require("../constants/api.constants");
-const ApiUtils = require("../utils/Api.utils");
-const MockProductoApi = new MockApi("producto");
-
-const mockProductController = (req, res, next) => {
-  try {
-    const mockedProducts = MockProductoApi.populate(5);
-    next();
-    return res.status(200).json(mockedProducts);
-  } catch (error) {
-    next(error);
-  }
-};
+const {workingDao: apiProducto} = require("../models/dao/index");
 
 const getAllDataOrById = async (req, res, next) => {
   try {
@@ -68,7 +54,6 @@ const deleteController = async (req, res, next) => {
 };
 
 module.exports = {
-  mockProductController,
   getAllDataOrById,
   saveController,
   updateController,

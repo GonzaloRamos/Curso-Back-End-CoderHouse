@@ -4,7 +4,7 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
-const Utils = require("./utils/Utils");
+const Utils = require("./src/utils/Utils");
 
 //import clusters
 const cluster = require("cluster");
@@ -12,36 +12,33 @@ const numCPUs = require("os").cpus().length;
 
 //Import log4js y loggers
 const log4js = require("log4js");
-const {infoLogger} = require("./log/logger/index");
+const {infoLogger} = require("./src/log/logger/index");
 
 // import rutas
-const rutasApi = require("./router/api/app.routes");
-const rutasWeb = require("./router/web/indexWeb.routes");
+const rutasApi = require("./src/router/api/app.routes");
+const rutasWeb = require("./src/router/web/indexWeb.routes");
 
 //import sessions
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
 //import dao chats
-const {chatDao} = require("./models/dao/index");
+const {chatDao} = require("./src/models/dao/index");
 
 //import Config
-const {PORT, MODE, mongoDB} = require("./config/config");
+const {PORT, MODE, mongoDB} = require("./src/config/config");
 
 //import passport
-const passport = require("./middlewares/auth/passport");
-
-//import errorHandñer
-const errorHandler = require("./middlewares/errorHandlers/index");
+const passport = require("./src/middlewares/auth/passport");
 
 //Config server
-app.set("views", "./views");
+app.set("views", "./src/views");
 app.set("view engine", "ejs");
 
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static("./public"));
+app.use(express.static("./src/public"));
 app.use(
   session({
     store: MongoStore.create({mongoUrl: mongoDB.uri}),
@@ -67,7 +64,6 @@ app.use(
     ],
   })
 );
-
 const emitMensaje = async () => {
   const mensaje = await chatDao.getAllDataOrById();
   const normalizedData = Utils.getNormalizedData(mensaje);
