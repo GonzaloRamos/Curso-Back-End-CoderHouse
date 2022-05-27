@@ -8,14 +8,15 @@ const ApiUtils = require("../../utils/Api.utils");
 })();
 
 class MongoDBContainer {
+  #model;
   constructor(collection, schema) {
-    this.model = Mongoose.model(collection, schema);
+    this.#model = Mongoose.model(collection, schema);
   }
 
   async createData(data) {
     try {
       const dataComplete = {timeStamp: Date.now(), ...data};
-      return await this.model.create(dataComplete);
+      return await this.#model.create(dataComplete);
     } catch (error) {
       const newError = ApiUtils.formatErrorObject(STATUS.INTERNAL_ERROR, error.message);
       throw new Error(JSON.stringify(newError));
@@ -25,11 +26,11 @@ class MongoDBContainer {
   async getAllDataOrById(ID) {
     try {
       if (ID) {
-        const result = await this.model.findById(ID);
+        const result = await this.#model.findById(ID);
         return result;
       }
 
-      const result = await this.model.find({}, {_id: 1, __v: 0});
+      const result = await this.#model.find({}, {_id: 1, __v: 0});
       return result;
     } catch (error) {
       const newError = ApiUtils.formatErrorObject(
@@ -49,7 +50,7 @@ class MongoDBContainer {
         );
         throw new Error(JSON.stringify(newError));
       }
-      const document = await this.model.updateMany({_id: ID}, {new: true});
+      const document = await this.#model.updateMany({_id: ID}, {new: true});
 
       return document;
     } catch (error) {
@@ -72,7 +73,7 @@ class MongoDBContainer {
 
         throw new Error(JSON.stringify(newError));
       }
-      return await this.model.findByIdAndDelete(ID);
+      return await this.#model.findByIdAndDelete(ID);
     } catch (error) {
       const newError = ApiUtils.formatErrorObject(
         STATUS.NOT_FOUND,
