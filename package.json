@@ -24,12 +24,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node  index.js --factoryNames chat productos",
+    "start": "node  index.js",
     "start-dev": "nodemon  index.js  --port=3000 --mode='fork'",
-    "fork": "pm2 start index.js --name='desafio-Nginx' --watch -- --port=8081",
-    "cluster": "pm2 start index.js --name='desafio-nginx-Cluster' --watch -i max -- --port=8082",
+    "start-fork": "pm2 start index.js --name='desafio-Nginx' --watch -- --port=8081",
+    "start-cluster": "pm2 start index.js --name='desafio-nginx-Cluster' --watch -i max -- --port=8082",
     "test": "node benchmark.js",
-    "profiling": "node --prof index.js",
+    "test-profiling": "node --prof index.js",
     "start0x": "0x index.js"
   },
   "keywords": [],

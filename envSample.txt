@@ -1,0 +1,4 @@
+DATABASE_TO_USE = mongo
+MONGO_PASS = pass Mongo
+MONGO_DATABASE = Mongo Database
+PORT = 3000 or any

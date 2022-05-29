@@ -1,14 +1,10 @@
-const {workingDao: apiProducto} = require("../models/dao/index");
+const ProductosRepository = require("../models/repository/Productos.repository");
 
 const getAllDataOrById = async (req, res, next) => {
   try {
     const {id} = req.params;
-    if (id) {
-      const producto = await apiProducto.getAllDataOrById(id);
-      return res.status(200).json(producto);
-    }
-    const productos = await apiProducto.getAllDataOrById();
-    return res.status(200).json(productos);
+    const producto = await ProductosRepository.getAllDataOrById(id);
+    return res.status(200).json(producto);
   } catch (error) {
     next(error);
   }
@@ -16,12 +12,9 @@ const getAllDataOrById = async (req, res, next) => {
 
 const saveController = async (req, res, next) => {
   try {
-    const {title, price, image} = req.body;
-    if (title && price && image) {
-      await apiProducto.createData({title, price, image});
-
-      return res.status(200).redirect("/");
-    }
+    const result = await ProductosRepository.createData(req.body);
+    console.log("result", result);
+    return res.status(200).json(result);
   } catch (error) {
     next(error);
   }
@@ -30,8 +23,9 @@ const saveController = async (req, res, next) => {
 const updateController = async (req, res, next) => {
   try {
     const {id} = req.params;
-    const {_doc} = await apiProducto.updateData(id, req.body);
-    return res.status(200).json({..._doc, mensaje: "Producto actualizado"});
+    const updatedProduct = await ProductosRepository.updateData(id, req.body);
+    console.log("updatedProduct", updatedProduct);
+    return res.status(200).json({...updatedProduct, mensaje: "Producto actualizado"});
   } catch (error) {
     next(error);
   }
@@ -40,14 +34,8 @@ const updateController = async (req, res, next) => {
 const deleteController = async (req, res, next) => {
   try {
     const {id} = req.params;
-
-    const deleted = await apiProducto.deleteData(id);
-    const response = {
-      doc: deleted._doc,
-      message: `Se elimino satisfactoriammente el producto.`,
-    };
-
-    res.status(200).json(response);
+    const resultDeleted = await ProductosRepository.deleteData(id);
+    res.status(200).json(resultDeleted);
   } catch (error) {
     next(error);
   }

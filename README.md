@@ -1,6 +1,30 @@
-# Desafio de nginx.
+# Rutas
+
+## Produtocs
+
+`/api/productos/:id?` Metodo GET devuelve todos los productos o el que se le pasa por ID
+`/api/productos/save` Metodo POST crea un producto. Acepta: title, price, image (solo URL)
+`/api/productos/:id` Metodo Put actualiza un producto.
+`/api/productos/:id` Metodo DELETE elimina un producto.
+
+## Sitio web
+
+`/` Lleva a `/home` si el usuario esta autenticado.
+`/login` Página de login.
+`/register` Página de registro
+
+# Inicia el proyecto.
 
 Primero ejecutar `npm i` para instalar todas las dependencias
+En los scripts se puede pasar como argumento PORT
+`npm run start` Ejecuta el archivo index.js
+`npm run start-dev` Ejecuta el archivo index.js con nodemon.
+`npm run start-fork` Ejecuta el servidor con el módulo pm2 en modo fork
+`npm run start-cluster` Ejecuta el servidor con el módulo pm2 en modo cluster
+`npm run test` Ejecuta pruebas sobre el servidor con artilery. Se configura en benchmark.js
+`npm run test-profiling` Ejecuta pruebas sobre el servidor con node profiling.
+
+# Desafio de nginx.
 
 Para iniciar el servidor:
 

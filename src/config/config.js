@@ -15,7 +15,4 @@ module.exports = {
   PORT,
   MODE,
   DATABASE_TO_USE: process.env.DATABASE_TO_USE,
-  factoryNames: cliArgv.argv.factoryNames
-    ? cliArgv.array("factoryNames").argv.factoryNames
-    : [],
 };

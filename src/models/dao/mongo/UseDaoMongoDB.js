@@ -1,22 +1,20 @@
-const MongoDBContainer = require("../../containers/MongoDBContainer");
-const userSchema = require("../../schemas/userSchema");
+const MongoDBContainer = require("../../containers/mongo/MongoDBContainer");
+const userSchema = require("../../schema/userSchema");
 
 class UserDao extends MongoDBContainer {
-  static #instance = null;
+  static #instance;
   constructor() {
-    super("user", userSchema);
-  }
-
-  static getInstance() {
-    if (!this.#instance) {
-      this.#instance = new UserDao();
+    if (!!UserDao.#instance) {
+      return UserDao.#instance;
     }
-    return this.#instance;
+    super("users", userSchema);
+    UserDao.#instance = this;
   }
 
   async getByEmail(email) {
     try {
-      const document = await this.model.findOne({email}, {__V: 0});
+      const document = await this.getByFilter({email});
+      console.log("document", document);
       if (!document) {
         const errorMessage = "Usuario o email invalido";
         throw new Error(JSON.stringify({code: 404, errorMessage}));
@@ -24,7 +22,7 @@ class UserDao extends MongoDBContainer {
         return document;
       }
     } catch (error) {
-      throw new Error({code: 500, message: error.message});
+      throw new Error(JSON.stringify({code: 500, message: error.message}));
     }
   }
 }

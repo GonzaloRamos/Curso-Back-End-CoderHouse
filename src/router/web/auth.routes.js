@@ -1,6 +1,5 @@
 const express = require("express");
 const authWebRouter = express.Router();
-const path = require("path");
 const passport = require("../../middlewares/auth/passport");
 
 authWebRouter.get("/", (req, res) => {

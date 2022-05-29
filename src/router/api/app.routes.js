@@ -10,7 +10,7 @@ router.use(express.json());
 router.use(express.urlencoded({extended: true}));
 
 //Rutas
-router.use("/productos/", rutaProductos);
+router.use("/productos", rutaProductos);
 router.use("/random/", randomApi);
 
 router.use(errorHandler);

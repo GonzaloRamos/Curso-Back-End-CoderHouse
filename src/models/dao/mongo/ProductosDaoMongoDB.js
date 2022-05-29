@@ -1,17 +1,15 @@
-const MongoDBContainer = require("../../containers/MongoDBContainer");
-const {productoSchema} = require("../../schemas/index");
+const MongoDBContainer = require("../../containers/mongo/MongoDBContainer");
+const {productoSchema} = require("../../schema/index");
 
 class ProductosDaoMongoDB extends MongoDBContainer {
-  static #instance = null;
-  constructor() {
-    super("productos", productoSchema);
-  }
+  static #instance;
 
-  static getInstance() {
-    if (!this.#instance) {
-      this.#instance = new ProductosDaoMongoDB();
+  constructor() {
+    if (!!ProductosDaoMongoDB.#instance) {
+      return ProductosDaoMongoDB.#instance;
     }
-    return this.#instance;
+    super("productos", productoSchema);
+    ProductosDaoMongoDB.#instance = this;
   }
 }
 
