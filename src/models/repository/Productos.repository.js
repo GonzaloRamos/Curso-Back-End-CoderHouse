@@ -1,3 +1,4 @@
+const STATUS = require("../../config/constants/api.constants");
 const ApiUtils = require("../../utils/Api.utils");
 const {productosDao} = require("../dao");
 const ProductoDto = require("../dtos/Producto.dto.js");
@@ -35,7 +36,11 @@ class ProductosRepository {
       });
       return this.productoDTOsList;
     } catch (error) {
-      throw new Error(error.message);
+      const newError = ApiUtils.formatErrorObject(
+        STATUS.NOT_FOUND,
+        "No se encontro un registro con id " + id
+      );
+      throw new Error(JSON.stringify(newError));
     }
   }
 
@@ -48,16 +53,17 @@ class ProductosRepository {
       const result = await productosDao.createData({title, price, image});
       return result;
     } catch (error) {
-      const newError = ApiUtils.formatErrorObject(
-        STATUS.NOT_FOUND,
-        `No se enontro un registro con ID: ${ID}`
-      );
-      throw new Error(newError);
+      if (error.message === "Faltan datos") {
+        const newError = ApiUtils.formatErrorObject(STATUS.BAD_REQUEST, error.message);
+        throw new Error(JSON.stringify(newError));
+      }
+      throw new Error(error.message);
     }
   }
 
   async updateData(id, data) {
     try {
+      console.log(id, data);
       if (!id || ApiUtils.isEmpty(data)) {
         const newError = ApiUtils.formatErrorObject(
           STATUS.BAD_REQUEST,
@@ -67,24 +73,31 @@ class ProductosRepository {
       }
       const {title, price, image} = data;
       if (!price) {
-        throw new Error(
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
           "No se puede actualizar el precio. Debe estar definido o ser mayor que 0."
         );
+        throw new Error(JSON.stringify(newError));
       }
 
       if (!image) {
-        throw new Error(
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
           "No se puede actualizar la imagen. Debe ingresar una url valida."
         );
+        throw new Error(JSON.stringify(newError));
       }
 
       if (!title) {
-        throw new Error("No se puede actualizar el titulo. Debe ingresar uno.");
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
+          "No se puede actualizar el titulo. Debe ingresar un titulo valido."
+        );
+        throw new Error(JSON.stringify(newError));
       }
+      await productosDao.updateData(id, data);
 
-      const updateResult = await productosDao.updateData(id, data);
-
-      return updateResult;
+      return {...data};
     } catch (error) {
       throw new Error(error.message);
     }
@@ -93,7 +106,11 @@ class ProductosRepository {
   async deleteData(id) {
     try {
       if (!id) {
-        throw new Error("No se proporciono un ID");
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
+          "No se proporciono ningun ID."
+        );
+        throw new Error(JSON.stringify(newError));
       }
       const deleted = await productosDao.deleteData(id);
       const response = {
@@ -101,6 +118,27 @@ class ProductosRepository {
         message: `Se elimino satisfactoriammente el producto.`,
       };
 
+      return response;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteByFilter(filter) {
+    try {
+      if (ApiUtils.isEmpty(filter)) {
+        const newError = ApiUtils.formatErrorObject(
+          STATUS.BAD_REQUEST,
+          "No se proporciono ningun filtro."
+        );
+        throw new Error(JSON.stringify(newError));
+      }
+      const deleted = await productosDao.deleteByFilter(filter);
+      console.log("deleted", deleted);
+      const response = {
+        doc: deleted._doc,
+        message: `Se elimino satisfactoriamente el producto.`,
+      };
       return response;
     } catch (error) {
       throw new Error(error.message);

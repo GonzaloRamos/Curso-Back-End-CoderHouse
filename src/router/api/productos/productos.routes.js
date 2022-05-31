@@ -6,14 +6,17 @@ const {
   saveController,
   updateController,
   deleteController,
+  deleteByFilterController,
 } = require("../../../controllers/productos.controllers");
 
 router.get("/:id?", getAllDataOrById);
 
 router.post("/save", saveController);
 
-router.put("/:id?", updateController);
+router.put("/update/:id?", updateController);
 
-router.delete("/:id?", deleteController);
+router.delete("/deleteByFilter", deleteByFilterController);
+
+router.delete("/deleteById/:id?", deleteController);
 
 module.exports = router;

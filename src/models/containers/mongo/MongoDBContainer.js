@@ -1,7 +1,5 @@
 const Mongoose = require("mongoose");
 const {mongoDB} = require("../../../config/config");
-const STATUS = require("../../../config/constants/api.constants");
-const ApiUtils = require("../../../utils/Api.utils");
 
 (async () => {
   await Mongoose.connect(mongoDB.uri);
@@ -19,8 +17,7 @@ class MongoDBContainer {
       const dataComplete = {timeStamp: Date.now(), ...data};
       return await this.#model.create(dataComplete);
     } catch (error) {
-      const newError = ApiUtils.formatErrorObject(STATUS.INTERNAL_ERROR, error.message);
-      throw new Error(JSON.stringify(newError));
+      throw new Error(error.message);
     }
   }
 
@@ -38,10 +35,10 @@ class MongoDBContainer {
     }
   }
 
-  async updateData(ID, data) {
+  async updateData(id, data) {
     try {
-      const document = await this.#model.updateOne({_id: ID}, data, {new: true});
-      xº;
+      const document = await this.#model.updateOne({_id: id}, data, {new: true});
+
       return document;
     } catch (error) {
       throw new Error(error.message);
@@ -60,6 +57,15 @@ class MongoDBContainer {
   async deleteData(ID) {
     try {
       return await this.#model.findByIdAndDelete(ID);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async deleteByFilter(filter) {
+    try {
+      const result = await this.#model.deleteMany(filter, {multi: true});
+      return result;
     } catch (error) {
       throw new Error(error.message);
     }

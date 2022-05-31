@@ -1,8 +1,10 @@
 const {errorLogger} = require("../../log/logger/index");
 const errorHandler = (err, req, res, next) => {
-  const {error, message} = JSON.parse(err.message);
+  console.log(err);
+  const {error, message} = JSON.parse(err);
+
   errorLogger.error(`Error en metodo ${req.method} en la url ${req.url}. ${message}`);
-  res.render("./pages/errors/error.ejs", {...error, message}).status(code);
+  res.status(error.code).render("./pages/errors/error.ejs", {...error, message});
 };
 
 module.exports = errorHandler;

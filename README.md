@@ -1,4 +1,8 @@
-# Rutas
+# Desafio tests
+
+Para ejecutar el test iniciar el servidor `npm run start-dev` y luego en una instancia nueva de la terminal `npm run test`
+
+# Ruta
 
 ## Produtocs
 
