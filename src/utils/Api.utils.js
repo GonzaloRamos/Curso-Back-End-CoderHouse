@@ -10,6 +10,12 @@ class ApiUtils extends Utils {
 
   static formatErrorObject = (error, message) => ({error, message});
 
+  /**
+   * It takes two objects and returns an array of the keys that are common to both objects.
+   * @param obj1 - The object that you want to update
+   * @param obj2 - The object that you want to compare with.
+   * @returns An array of common keys between the two objects.
+   */
   static getSameKeys(obj1, obj2) {
     const keys1 = Object.keys(obj1._doc);
     const keys2 = Object.keys(obj2);

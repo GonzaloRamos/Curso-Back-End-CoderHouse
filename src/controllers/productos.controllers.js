@@ -1,18 +1,18 @@
 const ProductosRepository = require("../models/repository/Productos.repository");
 
-const getAllDataOrById = async (req, res, next) => {
+const getAllProductsController = async (req, res, next) => {
   try {
     const {id} = req.params;
-    const producto = await ProductosRepository.getAllDataOrById(id);
+    const producto = await ProductosRepository.getAllProducts(id);
     return res.status(200).json(producto);
   } catch (error) {
     next(error.message);
   }
 };
 
-const saveController = async (req, res, next) => {
+const saveProductController = async (req, res, next) => {
   try {
-    const result = await ProductosRepository.createData(req.body);
+    const result = await ProductosRepository.createProduct(req.body);
 
     return res.status(201).json(result);
   } catch (error) {
@@ -20,27 +20,27 @@ const saveController = async (req, res, next) => {
   }
 };
 
-const updateController = async (req, res, next) => {
+const updateProductController = async (req, res, next) => {
   try {
     const {id} = req.params;
-    const updatedProduct = await ProductosRepository.updateData(id, req.body);
+    const updatedProduct = await ProductosRepository.updateProduct(id, req.body);
     return res.status(200).json({...updatedProduct, mensaje: "Producto actualizado"});
   } catch (error) {
     next(error.message);
   }
 };
 
-const deleteController = async (req, res, next) => {
+const deleteProductByIdController = async (req, res, next) => {
   try {
     const {id} = req.params;
-    const resultDeleted = await ProductosRepository.deleteData(id);
+    const resultDeleted = await ProductosRepository.deleteProduct(id);
     res.status(200).json(resultDeleted);
   } catch (error) {
     next(error.message);
   }
 };
 
-const deleteByFilterController = async (req, res, next) => {
+const deleteProductByFilterController = async (req, res, next) => {
   try {
     const resultDeleted = await ProductosRepository.deleteByFilter(req.query);
 
@@ -51,9 +51,9 @@ const deleteByFilterController = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllDataOrById,
-  saveController,
-  updateController,
-  deleteController,
-  deleteByFilterController,
+  getAllProductsController,
+  deleteProductByFilterController,
+  saveProductController,
+  updateProductController,
+  deleteProductByIdController,
 };

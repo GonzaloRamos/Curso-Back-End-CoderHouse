@@ -2,7 +2,7 @@
 
 class ProductoDto {
   constructor() {
-    this._id = undefined;
+    this._id = "";
     this._title = "";
     this._price = 0;
     this._image = "";

@@ -1,3 +1,5 @@
+/* It's a class that creates a model from a collection and a schema, and then it has methods that allow
+you to create, read, update and delete data from the database. */
 const Mongoose = require("mongoose");
 const {mongoDB} = require("../../../config/config");
 
@@ -6,6 +8,7 @@ const {mongoDB} = require("../../../config/config");
   console.log("Conectado a MongoDB");
 })();
 
+/* Creating a class that will be used to create a model. */
 class MongoDBContainer {
   #model;
   constructor(collection, schema) {
@@ -21,6 +24,11 @@ class MongoDBContainer {
     }
   }
 
+  /**
+   * It returns all the data from the database or a single record if an ID is passed in.
+   * @param ID - The ID of the document you want to retrieve.
+   * @returns An array of objects.
+   */
   async getAllDataOrById(ID) {
     try {
       if (ID) {
@@ -54,6 +62,11 @@ class MongoDBContainer {
     }
   }
 
+  /**
+   * It takes an ID as a parameter, and then it finds the document with that ID and deletes it.
+   * @param ID - The ID of the document you want to delete.
+   * @returns The result of the query.
+   */
   async deleteData(ID) {
     try {
       return await this.#model.findByIdAndDelete(ID);
@@ -62,6 +75,11 @@ class MongoDBContainer {
     }
   }
 
+  /**
+   * It deletes all documents in the collection that match the filter
+   * @param filter - The filter to use to find the documents to delete.
+   * @returns The result of the deleteMany() method.
+   */
   async deleteByFilter(filter) {
     try {
       const result = await this.#model.deleteMany(filter, {multi: true});

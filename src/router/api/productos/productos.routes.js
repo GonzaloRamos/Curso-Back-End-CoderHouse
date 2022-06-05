@@ -1,22 +1,50 @@
 const express = require("express");
 const router = express.Router();
 
+//Controllers
+
+// const {
+//   getAllDataOrById,
+//   saveController,
+//   updateController,
+//   deleteController,
+//   deleteByFilterController,
+// } = require("../../../controllers/productos.controllers");
+
+//Repository GraphQl
 const {
-  getAllDataOrById,
-  saveController,
-  updateController,
-  deleteController,
-  deleteByFilterController,
-} = require("../../../controllers/productos.controllers");
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} = require("../../../models/repository/Productos.repository");
 
-router.get("/:id?", getAllDataOrById);
+const {graphqlHTTP} = require("express-graphql");
 
-router.post("/save", saveController);
+router.use(
+  "/",
+  graphqlHTTP({
+    schema: require("../../../models/schema/graphQL/productosSchemaGraphQL"),
+    rootValue: {
+      getAllProducts,
+      getProductById,
+      createProduct,
+      updateProduct,
+      deleteProduct,
+    },
+    graphiql: true,
+  })
+);
 
-router.put("/update/:id?", updateController);
+// router.get("/:id?", getAllDataOrById);
 
-router.delete("/deleteByFilter", deleteByFilterController);
+// router.post("/save", saveController);
 
-router.delete("/deleteById/:id?", deleteController);
+// router.put("/update/:id?", updateController);
+
+// router.delete("/deleteByFilter", deleteByFilterController);
+
+// router.delete("/deleteById/:id?", deleteController);
 
 module.exports = router;

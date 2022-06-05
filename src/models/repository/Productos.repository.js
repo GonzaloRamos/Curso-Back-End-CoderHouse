@@ -9,44 +9,47 @@ class ProductosRepository {
     if (!!ProductosRepository.#instance) {
       return ProductosRepository.#instance;
     }
-    this.productoDTO = new ProductoDto();
-    this.productoDTOsList = [];
     ProductosRepository.#instance = this;
   }
 
-  async getAllDataOrById(id = undefined) {
+  async getProductById({id}) {
     try {
-      if (id) {
-        const productoFromDB = await productosDao.getAllDataOrById(id);
-        this.productoDTO.id = productoFromDB._id;
-        this.productoDTO.title = productoFromDB.title;
-        this.productoDTO.price = productoFromDB.price;
-        this.productoDTO.image = productoFromDB.image;
-        this.productoDTO.description = productoFromDB.description;
-        return this.productoDTO;
-      }
-      const productosFromDB = await productosDao.getAllDataOrById();
-      productosFromDB.forEach((producto) => {
-        this.productoDTO.id = producto._id;
-        this.productoDTO.title = producto.title;
-        this.productoDTO.price = producto.price;
-        this.productoDTO.image = producto.image;
-        this.productoDTO.description = producto.description;
-        this.productoDTOsList.push(this.productoDTO);
-      });
-      return this.productoDTOsList;
+      const productoFromDB = await productosDao.getAllDataOrById(id);
+      const productDto = new ProductoDto();
+      productDto.id = productoFromDB._id;
+      productDto.title = productoFromDB.title;
+      productDto.price = productoFromDB.price;
+      productDto.image = productoFromDB.image;
+      productDto.description = productoFromDB.description;
+      return productDto;
     } catch (error) {
-      const newError = ApiUtils.formatErrorObject(
-        STATUS.NOT_FOUND,
-        "No se encontro un registro con id " + id
-      );
+      throw new Error(error.message);
+    }
+  }
+
+  async getAllProducts() {
+    try {
+      const productosFromDB = await productosDao.getAllDataOrById();
+      const lista = [];
+      productosFromDB.forEach((producto) => {
+        const productDto = new ProductoDto();
+        productDto.id = producto._id.toString();
+        productDto.title = producto.title;
+        productDto.price = producto.price;
+        productDto.image = producto.image;
+        productDto.description = producto.description;
+        lista.push(productDto);
+      });
+      return lista;
+    } catch (error) {
+      const newError = ApiUtils.formatErrorObject(STATUS.NOT_FOUND, error.message);
       throw new Error(JSON.stringify(newError));
     }
   }
 
-  async createData(data) {
+  async createProduct({producto}) {
     try {
-      const {title, price, image} = data;
+      const {title, price, image} = producto;
       if (!title || !price || !image) {
         throw new Error("Faltan datos");
       }
@@ -61,17 +64,16 @@ class ProductosRepository {
     }
   }
 
-  async updateData(id, data) {
+  async updateProduct({id, producto}) {
     try {
-      console.log(id, data);
-      if (!id || ApiUtils.isEmpty(data)) {
+      if (!id || ApiUtils.isEmpty(producto)) {
         const newError = ApiUtils.formatErrorObject(
           STATUS.BAD_REQUEST,
-          `Error en la petición. No se proporciono ningun ID o data.`
+          `Error en la petición. No se proporciono ningun ID o producto.`
         );
         throw new Error(JSON.stringify(newError));
       }
-      const {title, price, image} = data;
+      const {title, price, image} = producto;
       if (!price) {
         const newError = ApiUtils.formatErrorObject(
           STATUS.BAD_REQUEST,
@@ -95,15 +97,15 @@ class ProductosRepository {
         );
         throw new Error(JSON.stringify(newError));
       }
-      await productosDao.updateData(id, data);
+      await productosDao.updateData(id, producto);
 
-      return {...data};
+      return {...producto};
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  async deleteData(id) {
+  async deleteProduct({id}) {
     try {
       if (!id) {
         const newError = ApiUtils.formatErrorObject(
@@ -124,7 +126,7 @@ class ProductosRepository {
     }
   }
 
-  async deleteByFilter(filter) {
+  async deleteProductByFilter({filter}) {
     try {
       if (ApiUtils.isEmpty(filter)) {
         const newError = ApiUtils.formatErrorObject(
@@ -147,5 +149,4 @@ class ProductosRepository {
 }
 
 const instance = new ProductosRepository();
-
 module.exports = instance;

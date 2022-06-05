@@ -1,3 +1,11 @@
+# Desafio GraphQl
+
+Ejecutar el servidor con `npm run start-dev`. La definicion del schema se encuentra en src/models/schemas/graphQL.
+
+Se llama a las funciones desde el archivo productos.routes.js.
+
+La ruta para testear con graphiQl es `/api/productos`
+
 # Desafio tests
 
 Para ejecutar el test iniciar el servidor `npm run start-dev` y luego en una instancia nueva de la terminal `npm run test`
