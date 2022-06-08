@@ -1,16 +1,16 @@
-function webAuth(req, res, next) {
-  if (req.isAuthenticated()) {
+function webAuth(ctx, next) {
+  if (ctx.isAuthenticated()) {
     next();
   } else {
-    res.redirect("/login");
+    ctx.redirect("/login");
   }
 }
 
-function apiAuth(req, res, next) {
-  if (req.isAuthenticated()) {
+function apiAuth(ctx, next) {
+  if (ctx.isAuthenticated()) {
     next();
   } else {
-    res.status(401).json({error: "no autorizado!"});
+    ctx.body = {status: 401, message: "no autorizado!"};
   }
 }
 

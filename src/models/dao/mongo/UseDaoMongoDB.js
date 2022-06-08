@@ -14,7 +14,6 @@ class UserDao extends MongoDBContainer {
   async getByEmail(email) {
     try {
       const document = await this.getByFilter({email});
-      console.log("document", document);
       if (!document) {
         const errorMessage = "Usuario o email invalido";
         throw new Error(JSON.stringify({code: 404, errorMessage}));

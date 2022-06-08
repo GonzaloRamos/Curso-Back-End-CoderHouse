@@ -1,5 +1,5 @@
-const express = require("express");
-const infoRoute = express.Router();
+const Router = require("koa-router");
+const infoRoute = new Router();
 const CPUs = require("os").cpus().length;
 const Utils = require("../../utils/Utils");
 

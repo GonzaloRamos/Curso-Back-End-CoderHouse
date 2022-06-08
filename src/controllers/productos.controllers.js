@@ -1,58 +1,82 @@
 const ProductosRepository = require("../models/repository/Productos.repository");
 
-const getAllProductsController = async (req, res, next) => {
+const getAllProductsController = async (ctx, next) => {
   try {
-    const {id} = req.params;
-    const producto = await ProductosRepository.getAllProducts(id);
-    return res.status(200).json(producto);
+    const producto = await ProductosRepository.getAllProducts();
+    ctx.body = {
+      status: 200,
+      data: producto,
+      message: "Productos encontrados",
+    };
   } catch (error) {
-    next(error.message);
+    const errorObject = JSON.parse(error.message);
+    ctx.body = {message: errorObject.message, status: errorObject.error.code};
   }
 };
 
-const saveProductController = async (req, res, next) => {
+const getProductByIdController = async (ctx, next) => {
   try {
-    const result = await ProductosRepository.createProduct(req.body);
-
-    return res.status(201).json(result);
+    const id = ctx.params.id;
+    const product = await ProductosRepository.getProductById(id);
+    ctx.body = {
+      status: 200,
+      data: product,
+      message: "Producto encontrado",
+    };
   } catch (error) {
-    next(error.message);
+    const errorObject = JSON.parse(error.message);
+    ctx.body = {status: errorObject.error.code, message: errorObject.message};
   }
 };
 
-const updateProductController = async (req, res, next) => {
+const saveProductController = async (ctx, next) => {
   try {
-    const {id} = req.params;
-    const updatedProduct = await ProductosRepository.updateProduct(id, req.body);
-    return res.status(200).json({...updatedProduct, mensaje: "Producto actualizado"});
+    const result = await ProductosRepository.createProduct(ctx.request.body);
+
+    ctx.body = {
+      status: 201,
+      data: result,
+      message: "Producto creado",
+    };
   } catch (error) {
-    next(error.message);
+    const errorObject = JSON.parse(error.message);
+    ctx.body = {message: errorObject.message, status: errorObject.error.code};
   }
 };
 
-const deleteProductByIdController = async (req, res, next) => {
+const updateProductController = async (ctx, next) => {
   try {
-    const {id} = req.params;
+    const id = ctx.params.id;
+    const updatedProduct = await ProductosRepository.updateProduct(id, ctx.request.body);
+    ctx.body = {
+      status: 201,
+      data: updatedProduct,
+      message: "Producto actualizado",
+    };
+  } catch (error) {
+    const errorObject = JSON.parse(error.message);
+    ctx.body = {message: errorObject.message, status: errorObject.error.code};
+  }
+};
+
+const deleteProductByIdController = async (ctx, next) => {
+  try {
+    const id = ctx.params.id;
     const resultDeleted = await ProductosRepository.deleteProduct(id);
-    res.status(200).json(resultDeleted);
+    ctx.body = {
+      status: 204,
+      data: resultDeleted,
+      message: "Producto eliminado",
+    };
   } catch (error) {
-    next(error.message);
-  }
-};
-
-const deleteProductByFilterController = async (req, res, next) => {
-  try {
-    const resultDeleted = await ProductosRepository.deleteByFilter(req.query);
-
-    res.status(200).json(resultDeleted);
-  } catch (error) {
-    next(error.message);
+    const errorObject = JSON.parse(error.message);
+    ctx.body = {message: errorObject.message, status: errorObject.error.code};
   }
 };
 
 module.exports = {
   getAllProductsController,
-  deleteProductByFilterController,
+  getProductByIdController,
   saveProductController,
   updateProductController,
   deleteProductByIdController,

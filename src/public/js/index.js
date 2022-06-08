@@ -4,7 +4,6 @@ const $ = (selector) => document.querySelector(selector);
 
 const button = $("#buttonSend");
 const btnLogOut = $("#btn-logout");
-console.log(btnLogOut);
 const deNormalizeData = (data) => {
   const schemaAuthor = new normalizr.schema.Entity("author", {}, {idAttribute: "id"});
 
@@ -139,5 +138,3 @@ socket.on("chat", (messages) => {
       });
   }
 })();
-
-console.log("Hola desde index.js public");

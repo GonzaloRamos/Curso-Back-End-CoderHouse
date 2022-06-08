@@ -39,7 +39,7 @@ class MongoDBContainer {
       const result = await this.#model.find({}, {_id: 1, __v: 0});
       return result;
     } catch (error) {
-      throw new Error(JSON.stringify(newError));
+      throw new Error(error.message);
     }
   }
 

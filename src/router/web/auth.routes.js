@@ -1,58 +1,60 @@
-const express = require("express");
-const authWebRouter = express.Router();
+const Router = require("koa-router");
+const authWebRouter = new Router();
 const passport = require("../../middlewares/auth/passport");
 
-authWebRouter.get("/", (req, res) => {
-  res.redirect("/home");
+//TODO: implementar rutas con KOA
+
+authWebRouter.get("/", (ctx, next) => {
+  ctx.redirect("/home");
 });
 
-authWebRouter.get("/login", (req, res) => {
-  const nombre = req.user;
+authWebRouter.get("/login", async (ctx, next) => {
+  const nombre = ctx.user;
   if (nombre) {
-    res.redirect("/");
+    await ctx.redirect("/");
   } else {
-    res.render("./pages/auth/login.ejs");
+    await ctx.render("./login");
   }
 });
-authWebRouter.get("/register", (req, res) => {
+authWebRouter.get("/register", (ctx, next) => {
   const nombre = req.user;
   if (nombre) {
-    res.redirect("/");
+    ctx.redirect("/");
   } else {
-    res.render("./pages/auth/register.ejs");
+    ctx.render("./pages/auth/registers");
   }
 });
 
-authWebRouter.get("/logout", (req, res) => {
+authWebRouter.get("/logout", (ctx, next) => {
   const nombre = req.user.email;
   req.logOut();
   console.log("user logout");
-  res.render("logout.ejs", {nombre});
+  ctx.render("logouts", {nombre});
 });
 
-authWebRouter.get("/login-error", (req, res) => {
+authWebRouter.get("/login-error", (ctx, next) => {
   const error = "Credenciales no validas";
-  res.render("./pages/errors/error.ejs", {error});
+  ctx.render("./pages/errors/errors", {error});
 });
 
-authWebRouter.get("/register-error", (req, res) => {
+authWebRouter.get("/register-error", (ctx, next) => {
   const error = "Usuario ya registrado";
-  req.render("./pages/errors/error.ejs", {error});
+  req.render("./pages/errors/errors", {error});
 });
 
 authWebRouter.post(
   "/register",
   passport.authenticate("register", {failureRedirect: "/register-error"}),
-  (req, res) => {
-    res.redirect("/home");
+  (ctx, next) => {
+    ctx.redirect("/home");
   }
 );
 
 authWebRouter.post(
   "/login",
   passport.authenticate("login", {failureRedirect: "/login-error"}),
-  (req, res) => {
-    res.redirect("/home");
+  (ctx, next) => {
+    ctx.redirect("/home");
   }
 );
 

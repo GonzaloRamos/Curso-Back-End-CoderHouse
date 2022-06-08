@@ -1,17 +1,20 @@
-const express = require("express");
-const router = express.Router();
+const Router = require("koa-router");
+const router = new Router();
 const homeRoutes = require("./home.routes");
 const infoRoutes = require("./info.routes");
 const authRoutes = require("./auth.routes");
 const {warnLogger} = require("../../log/logger/index");
 
-router.use(homeRoutes);
-router.use(infoRoutes);
-router.use(authRoutes);
-router.get("*", (req, res) => {
-  const {url} = req;
-  warnLogger.warn(`Error al encontrar la página ${req.url} con método ${req.method}`);
-  res.status(404).render("pages/errors/error404.ejs", {url});
-});
+router
+  .use(authRoutes.routes())
+  .use(authRoutes.allowedMethods())
+  .use(homeRoutes.routes())
+  .use(homeRoutes.allowedMethods())
+  .use(infoRoutes.routes())
+  .use(infoRoutes.allowedMethods());
+// .get("*", (ctx) => {
+//   warnLogger.warn(`Error al encontrar la página ${ctx.url} con método ${ctx.method}`);
+//   ctx.render("pages/errors/error404.ejs", {url: ctx.url});
+// });
 
 module.exports = router;

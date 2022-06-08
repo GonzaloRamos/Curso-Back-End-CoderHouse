@@ -1,50 +1,27 @@
-const express = require("express");
-const router = express.Router();
+const Router = require("koa-router");
+const router = new Router({
+  prefix: "/productos",
+});
 
 //Controllers
 
-// const {
-//   getAllDataOrById,
-//   saveController,
-//   updateController,
-//   deleteController,
-//   deleteByFilterController,
-// } = require("../../../controllers/productos.controllers");
-
-//Repository GraphQl
 const {
-  getAllProducts,
-  getProductById,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-} = require("../../../models/repository/Productos.repository");
+  getAllProductsController,
+  getProductByIdController,
+  saveProductController,
+  updateProductController,
+  deleteProductByIdController,
+} = require("../../../controllers/productos.controllers");
 
-const {graphqlHTTP} = require("express-graphql");
+router
+  .get("/", getAllProductsController)
 
-router.use(
-  "/",
-  graphqlHTTP({
-    schema: require("../../../models/schema/graphQL/productosSchemaGraphQL"),
-    rootValue: {
-      getAllProducts,
-      getProductById,
-      createProduct,
-      updateProduct,
-      deleteProduct,
-    },
-    graphiql: true,
-  })
-);
+  .get("/:id", getProductByIdController)
 
-// router.get("/:id?", getAllDataOrById);
+  .post("/save", saveProductController)
 
-// router.post("/save", saveController);
+  .put("/update/:id", updateProductController)
 
-// router.put("/update/:id?", updateController);
-
-// router.delete("/deleteByFilter", deleteByFilterController);
-
-// router.delete("/deleteById/:id?", deleteController);
+  .delete("/deleteById/:id", deleteProductByIdController);
 
 module.exports = router;

@@ -1,7 +1,13 @@
 // Init imports
-const express = require("express");
+const path = require("path");
+//Koa
+const Koa = require("koa");
+const app = new Koa();
+const koaBody = require("koa-body");
+const serve = require("koa-static");
+const render = require("koa-ejs");
+
 const http = require("http");
-const app = express();
 const server = http.createServer(app);
 const io = require("socket.io")(server);
 const Utils = require("./src/utils/Utils");
@@ -19,7 +25,7 @@ const rutasApi = require("./src/router/api/app.routes");
 const rutasWeb = require("./src/router/web/indexWeb.routes");
 
 //import sessions
-const session = require("express-session");
+const session = require("koa-session");
 const MongoStore = require("connect-mongo");
 
 //import dao chats
@@ -31,49 +37,57 @@ const {PORT, MODE, mongoDB} = require("./src/config/config");
 //import passport
 const passport = require("./src/middlewares/auth/passport");
 
-//Config server
-app.set("views", "./src/views");
-app.set("view engine", "ejs");
+//Template engine
+render(app, {
+  root: path.join(__dirname, "src", "views"),
+  layout: "layout",
+  viewExt: "ejs",
+  async: true,
+  cache: false,
+  debug: true,
+});
+
+app.keys = ["login"];
 
 //Middlewares
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.static("./src/public"));
-app.use(
-  session({
-    store: MongoStore.create({mongoUrl: mongoDB.uri}),
-    secret: "login",
-    saveUninitialized: false,
-    resave: false,
-    rolling: true,
-    cookie: {
-      maxAge: 100000,
-    },
-  })
-);
+app
+  .use(koaBody())
+  .use(serve("./src/public"))
+  .use(passport.initialize())
+  .use(passport.session())
+  .use(
+    session(
+      {
+        store: MongoStore.create({mongoUrl: mongoDB.uri}),
+        secret: "login",
+        rolling: true,
+        maxAge: 100000,
+      },
+      app
+    )
+  )
+  .use(rutasWeb.routes())
+  .use(rutasWeb.allowedMethods())
+  .use(rutasApi.routes())
+  .use(rutasApi.allowedMethods());
 
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(
-  log4js.connectLogger(infoLogger, {
-    level: "auto",
-    statusRules: [
-      {from: 200, to: 304, level: "info"},
-      {codes: [404], level: "warn"},
-      {from: 500, to: 599, level: "error"},
-    ],
-  })
-);
+// .use(
+//   log4js.connectLogger(infoLogger, {
+//     level: "auto",
+//     statusRules: [
+//       {from: 200, to: 304, level: "info"},
+//       {codes: [404], level: "warn"},
+//       {from: 500, to: 599, level: "error"},
+//     ],
+//   })
+// );
+
 const emitMensaje = async () => {
   const mensaje = await chatDao.getAllDataOrById();
   const normalizedData = Utils.getNormalizedData(mensaje);
 
   io.sockets.emit("chat", normalizedData);
 };
-
-//Rutas
-app.use("/api", rutasApi);
-app.use(rutasWeb);
 
 io.on("connection", async (socket) => {
   emitMensaje();
@@ -99,12 +113,12 @@ if (MODE === "cluster") {
       console.log(`worker ${worker.process.pid} died`);
     });
   } else {
-    server.listen(PORT, () => {
+    app.listen(PORT, () => {
       console.log(`Escuchando en el puerto ${PORT}`, `Worker ${process.pid} started`);
     });
   }
 } else {
-  server.listen(PORT, () => {
+  app.listen(PORT, () => {
     console.log(`Escuchando en el puerto ${PORT}`, `Worker ${process.pid} Fork`);
   });
 }
